@@ -133,7 +133,7 @@
 		"scaleOutThroughputThreshold": 20000000,
 		"scaleOutTimeWindow": 10,
 		"throughputMetricName": "Network In",
-		"vmScaleSetMaxCount": 4,
+		"vmScaleSetMaxCount": 15,
 		"vmScaleSetMinCount": 2,
 		"vmssName": "[concat(variables('uniqueString'), '-vmss')]"
     },
