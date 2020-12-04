@@ -92,11 +92,14 @@
 		"userAssignManagedIdentity": {
 			"value": ""
 		},
-		"vmScaleSetMaxCount": {
-			"value": 4
-		},
 		"vmScaleSetMinCount": {
+			"value": 0
+		},
+		"vmScaleSetDefaultCount": {
 			"value": 2
+		},
+		"vmScaleSetMaxCount": {
+			"value": 600
 		},
 		"vmssName": {
 			"value": "bigip-vmss"

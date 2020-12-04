@@ -14,6 +14,9 @@
 		"appContainer": {
 			"value": "f5devcentral/f5-demo-app:1.0.1"
 		},
+		"bigIpImage": {
+            "value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+		},
 		"runtimeConfig": {
 			"value": "https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml"
 		},
@@ -22,6 +25,15 @@
 		},
 		"useAvailabilityZones": {
 			"value": true
+		},
+		"bigIpVmScaleSetMinCount": {
+            "value": 0
+		},
+		"bigIpVmScaleSetDefaultCount": {
+            "value": 2
+		},
+		"bigIpVmScaleSetMaxCount": {
+            "value": 100
 		},
 		"tagValues": {
 			"value": {

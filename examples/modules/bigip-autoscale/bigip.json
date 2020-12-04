@@ -214,17 +214,24 @@
       },
       "type": "string"
     },
-    "vmScaleSetMaxCount": {
-      "defaultValue": 10,
+    "vmScaleSetMinCount": {
+      "defaultValue": 0,
       "metadata": {
-        "description": "The maximum number of BIG-IP VEs that can be deployed into the VM Scale Set."
+        "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
       },
       "type": "int"
     },
-    "vmScaleSetMinCount": {
+    "vmScaleSetDefaultCount": {
       "defaultValue": 2,
       "metadata": {
         "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
+      },
+      "type": "int"
+    },     
+    "vmScaleSetMaxCount": {
+      "defaultValue": 600,
+      "metadata": {
+        "description": "The maximum number of BIG-IP VEs that can be deployed into the VM Scale Set."
       },
       "type": "int"
     },
@@ -533,7 +540,7 @@
         "profiles": [
           {
             "capacity": {
-              "default": "[parameters('vmScaleSetMinCount')]",
+              "default": "[parameters('vmScaleSetDefaultCount')]",
               "maximum": "[parameters('vmScaleSetMaxCount')]",
               "minimum": "[parameters('vmScaleSetMinCount')]"
             },

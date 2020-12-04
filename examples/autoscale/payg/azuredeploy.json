@@ -50,6 +50,13 @@
 			},
 			"type": "string"
 		},
+		"bigIpImage": {
+			"defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000",
+			"metadata": {
+			  "description": "2 formats accepted. URN of the image to use in Azure marketplace or id of custom image. Example URN value: f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.002000. You can find the URNs of F5 marketplace images in the README for this template or by running the command: az vm image list --output yaml --publisher f5-networks --all. See https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html for information on creating custom bigip image."
+			},
+			"type": "string"
+		},
 		"runtimeConfig": {
 			"defaultValue": "https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml",
 			"metadata": {
@@ -63,6 +70,27 @@
 				"description": "This deployment can deploy resources into Azure Availability Zones (if the region supports it).  If that is not desired the input should be set 'No'. If the region does not support availability zones the input should be set to No."
 			},
 			"type": "bool"
+		},
+		"bigIpVmScaleSetMinCount": {
+			"defaultValue": 0,
+			"metadata": {
+			  "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
+			},
+			"type": "int"
+		},
+		"bigIpVmScaleSetDefaultCount": {
+			"defaultValue": 2,
+			"metadata": {
+			  "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
+			},
+			"type": "int"
+		},		
+		"bigIpVmScaleSetMaxCount": {
+			"defaultValue": 600,
+			"metadata": {
+			  "description": "The maximum number of BIG-IP VEs that can be deployed into the VM Scale Set."
+			},
+			"type": "int"
 		},
 		"tagValues": {
 			"defaultValue": {
@@ -122,7 +150,7 @@
 		"cpuMetricName": "Percentage CPU",
 		"customAutoscaleRules": [{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"80","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"20","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"20000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"10000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}}],
 		"customEmail": [],
-		"image": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.004000",
+		"image": "[parameters('bigIpImage')]",
 		"instanceType": "Standard_DS3_v2",
 		"provisionPublicIPBigip": { "name": "publicIp01", "properties": { "idleTimeoutInMinutes": 15 } },
 		"roleDefinitionId": "",
@@ -133,8 +161,9 @@
 		"scaleOutThroughputThreshold": 20000000,
 		"scaleOutTimeWindow": 10,
 		"throughputMetricName": "Network In",
-		"vmScaleSetMaxCount": 15,
-		"vmScaleSetMinCount": 2,
+		"vmScaleSetMinCount": "[parameters('bigIpVmScaleSetMinCount')]",
+		"vmScaleSetDefaultCount": "[parameters('bigIpVmScaleSetDefaultCount')]",		
+		"vmScaleSetMaxCount": "[parameters('bigIpVmScaleSetMaxCount')]",
 		"vmssName": "[concat(variables('uniqueString'), '-vmss')]"
     },
 	"resources": [
@@ -285,8 +314,9 @@
 					"throughputMetricName":{ "value": "[variables('throughputMetricName')]" },
 					"useAvailabilityZones":{ "value": "[parameters('useAvailabilityZones')]" },
 					"userAssignManagedIdentity":{ "value": "[if(variables('assignManagedIdentity'), reference('accessTemplate').outputs.userAssignedIdentityId.value, '')]" },
-					"vmScaleSetMaxCount":{ "value": "[variables('vmScaleSetMaxCount')]" },
 					"vmScaleSetMinCount":{ "value": "[variables('vmScaleSetMinCount')]" },
+					"vmScaleSetDefaultCount":{ "value": "[variables('vmScaleSetDefaultCount')]" },
+					"vmScaleSetMaxCount":{ "value": "[variables('vmScaleSetMaxCount')]" },
 					"vmssName":{ "value": "[variables('vmssName')]" }
 				}
 			}
