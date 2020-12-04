@@ -540,7 +540,7 @@
         "profiles": [
           {
             "capacity": {
-              "default": "[parameters('vmScaleSetMinCount')]",
+              "default": "[parameters('vmScaleSetDefaultCount')]",
               "maximum": "[parameters('vmScaleSetMaxCount')]",
               "minimum": "[parameters('vmScaleSetMinCount')]"
             },
