@@ -27,7 +27,7 @@
 			"value": true
 		},
 		"bigIpVmScaleSetMinCount": {
-            "value": 1
+            "value": 0
 		},
 		"bigIpVmScaleSetDefaultCount": {
             "value": 2

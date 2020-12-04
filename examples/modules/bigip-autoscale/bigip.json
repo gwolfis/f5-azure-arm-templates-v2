@@ -215,7 +215,7 @@
       "type": "string"
     },
     "vmScaleSetMinCount": {
-      "defaultValue": 1,
+      "defaultValue": 0,
       "metadata": {
         "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
       },
@@ -540,7 +540,7 @@
         "profiles": [
           {
             "capacity": {
-              "default": "[parameters('vmScaleSetDefaultCount')]",
+              "default": "[parameters('vmScaleSetMinCount')]",
               "maximum": "[parameters('vmScaleSetMaxCount')]",
               "minimum": "[parameters('vmScaleSetMinCount')]"
             },
