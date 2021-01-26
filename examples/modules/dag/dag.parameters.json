@@ -1,6 +1,6 @@
 {
 	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"dnsLabel": {
 			"value": "appDns"
@@ -23,11 +23,43 @@
 				"443"
 			]
 		},
-		"numberPublicAppIPAddresses": {
+		"numberPublicExternalIPAddresses": {
 			"value": 1
 		},
 		"numberPublicMgmtIPAddresses": {
 			"value": 0
+		},
+		"nsg0": {
+			"value": [
+				{
+					"destinationPortRanges": ["22","8443"],
+					"sourceAddressPrefix": "",
+					"protocol": "Tcp"
+				},
+				{
+					"destinationPortRanges": ["80","443"],
+					"sourceAddressPrefix": "",
+					"protocol": "Tcp"
+				}
+			]
+		},
+		"nsg1": {
+			"value": [
+				{
+					"destinationPortRanges": ["80","443"],
+					"sourceAddressPrefix": "",
+					"protocol": "Tcp"
+				}
+			]
+		},
+		"nsg2": {
+			"value": [
+				{
+					"destinationPortRanges": ["80","443"],
+					"sourceAddressPrefix": "",
+					"protocol": "Tcp"
+				}
+			]
 		},
 		"tagValues": {
 			"value": {

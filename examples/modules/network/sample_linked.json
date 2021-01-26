@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"artifactLocation": {
 			"defaultValue": "f5-azure-arm-templates-v2/examples/",
@@ -27,23 +27,11 @@
 			"properties": {
 				"mode": "Incremental",
 				"parameters": {
-					"appNsg": {
-						"value": "Default"
-					},
-					"mgmtNsg": {
-						"value": "Default"
+					"createNatGateway": {
+						"value": false
 					},
 					"numSubnets": {
 						"value": 2
-					},
-					"provisionPublicIP": {
-						"value": false
-					},
-					"restrictedSrcMgmtAddress": {
-						"value": "*"
-					},
-					"restrictedSrcMgmtPort": {
-						"value": "*"
 					},
 					"tagValues": {
 						"value": {
@@ -62,7 +50,7 @@
 					}
 				},
 				"templateLink": {
-					"contentVersion": "1.0.0.0",
+					"contentVersion": "1.2.0.0",
 					"uri": "[concat(parameters('templateBaseUrl'), parameters('artifactLocation'), 'modules/network/network.json')]"
 				}
 			},
@@ -70,22 +58,18 @@
 		}
 	],
 	"outputs": {
-		"appNSG": {
+		"routeTables": {
+			"type": "array",
+            "value": "[reference('networkTemplate').outputs.routeTables.value]"
+        },
+		"natGateway": {
 			"type": "string",
-			"value": "[reference('networkTemplate').outputs.appNSG.value]"
+			"value": "[reference('networkTemplate').outputs.natGateway.value]"
 		},
-		"appSubnet": {
-			"type": "string",
-			"value": "[reference('networkTemplate').outputs.appSubnet.value]"
-		},
-		"mgmtNSG": {
-			"type": "string",
-			"value": "[reference('networkTemplate').outputs.mgmtNSG.value]"
-		},
-		"mgmtSubnet": {
-			"type": "string",
-			"value": "[reference('networkTemplate').outputs.mgmtSubnet.value]"
-		},
+		"subnets": {
+			"type": "array",
+            "value": "[reference('networkTemplate').outputs.subnets.value]"
+        },
 		"virtualNetwork": {
 			"type": "string",
 			"value": "[reference('networkTemplate').outputs.virtualNetwork.value]"

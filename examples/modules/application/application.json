@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"adminUsername": {
 			"metadata": {
@@ -184,7 +184,7 @@
 			"properties": {
 				"publisher": "Microsoft.Azure.Extensions",
 				"settings": {
-					"commandToExecute": "[concat('apt-get update -y; apt-get -y install docker.io; docker run --name f5demo -p 80:80 -p 443:443 -d ', parameters('appContainer'), '')]"
+					"commandToExecute": "[concat('sleep 60; apt-get update -y; apt-get -y install docker.io; docker run --name f5demo -p 80:80 -p 443:443 -d ', parameters('appContainer'), '')]"
 				},
 				"type": "CustomScript",
 				"typeHandlerVersion": "2.0"

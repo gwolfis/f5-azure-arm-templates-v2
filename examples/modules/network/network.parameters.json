@@ -1,24 +1,12 @@
 {
 	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
-		"appNsg": {
-			"value": "Default"
-		},
-		"mgmtNsg": {
-			"value": "Default"
+		"createNatGateway": {
+			"value": false
 		},
 		"numSubnets": {
 			"value": 1
-		},
-		"provisionPublicIP": {
-			"value": false
-		},
-		"restrictedSrcMgmtAddress": {
-			"value": "*"
-		},
-		"restrictedSrcMgmtPort": {
-			"value": "*"
 		},
 		"tagValues": {
 			"value": {

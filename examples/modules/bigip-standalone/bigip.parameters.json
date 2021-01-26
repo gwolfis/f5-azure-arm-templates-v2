@@ -1,0 +1,90 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.1.0.0",
+	"parameters": {
+		"adminUsername": {
+			"value": "azureuser"
+		},
+		"image": {
+			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+		},
+		"instanceType": {
+			"value": "Standard_DS2_v2"
+		},
+        "loadBalancerBackendAddressPoolsArray": {
+            "value": [],
+        },
+        "mgmtSubnetId": {
+			"value": ""
+		},
+        "mgmtNsgId": {
+			"value": ""
+		},
+        "mgmtPublicIpId": {
+			"value": ""
+		},
+        "mgmtSelfIp": {
+			"value": ""
+		},
+		"nic1SubnetId": {
+			"value": ""
+		},
+        "nic1NsgId": {
+			"value": ""
+		},
+        "nic1PrimaryPublicId": {
+			"value": ""
+		},
+        "nic1SelfIp": {
+			"value": ""
+		},
+		"nic1ServiceIPs": {
+			"value": []
+		},
+        "nic2SubnetId": {
+			"value": ""
+		},
+        "nic2NsgId": {
+			"value": ""
+		},
+		"nic2PrimaryPublicId": {
+			"value": ""
+		},
+        "nic2SelfIp": {
+			"value": ""
+		},
+		"nic2ServiceIPs": {
+			"value": []
+		},
+		"roleDefinitionId": {
+			"value": ""
+		},
+		"runtimeConfig": {
+			"value": ""
+		},
+		"sshKey": {
+			"value": ""
+		},       
+		"tagValues": {
+			"value": {
+				"application": "APP",
+				"cost": "COST",
+				"environment": "ENV",
+				"group": "GROUP",
+				"owner": "OWNER"
+			}
+		},
+        "uniqueString": {
+			"value": "myString"
+		},
+		"useAvailabilityZones": {
+			"value": "Yes"
+		},
+		"userAssignManagedIdentity": {
+			"value": ""
+		},
+		"vmName": {
+			"value": "bigip-vm"
+		}
+	}
+}

@@ -1,0 +1,149 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.1.0.0",
+	"parameters": {
+		"artifactLocation": {
+			"defaultValue": "f5-azure-arm-templates-v2/examples/",
+			"metadata": {
+				"description": "Location where modules folder is stored."
+			},
+			"type": "string"
+		},
+		"templateBaseUrl": {
+			"defaultValue": "https://cdn.f5.com/product/cloudsolutions/",
+			"metadata": {
+				"description": "URL where templates are stored."
+			},
+			"type": "string"
+		}
+	},
+	"variables": {
+		"deploymentApiVersion": "2019-05-01"
+	},
+	"resources": [
+		{
+			"apiVersion": "[variables('deploymentApiVersion')]",
+			"name": "bigipTemplate",
+			"properties": {
+				"mode": "Incremental",
+				"parameters": {
+					"adminUsername": {
+						"value": "azureuser"
+					},
+					"image": {
+						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+					},
+					"instanceType": {
+						"value": "Standard_DS2_v2"
+					},
+                    "loadBalancerBackendAddressPoolsArray": {
+                        "value": [],
+                    },                   
+					"roleDefinitionId": {
+						"value": ""
+					},
+					"runtimeConfig": {
+						"value": ""
+					},
+					"sshKey": {
+						"value": ""
+					},
+					"tagValues": {
+						"value": {
+							"application": "APP",
+							"cost": "COST",
+							"environment": "ENV",
+							"group": "GROUP",
+							"owner": "OWNER"
+						}
+					},
+                    "uniqueString": {
+						"value": "myString"
+					},
+					"useAvailabilityZones": {
+						"value": "Yes"
+					},
+					"userAssignManagedIdentity": {
+						"value": ""
+					},
+					"vmName": {
+						"value": "bigip-vm"
+					},
+                    "mgmtSubnetId": {
+                        "value": ""
+                    },
+                    "mgmtNsgId": {
+                        "value": ""
+                    },
+                    "mgmtPublicIpId": {
+                        "value": ""
+                    },
+                    "mgmtSelfIP": {
+                        "value": ""
+                    },
+					"nic1SubnetId": {
+						"value": ""
+					},
+					"nic1NsgId": {
+						"value": ""
+					},
+					"nic1PrimaryPublicId": {
+						"value": ""
+					},
+					"nic1SelfIp": {
+						"value": ""
+					},
+					"nic2ServiceIPs": {
+                        "value": []
+                    },
+					"nic2SubnetId": {
+						"value": ""
+					},
+					"nic2NsgId": {
+						"value": ""
+					},
+					"nic2PrimaryPublicId": {
+						"value": ""
+					},
+					"nic2SelfIp": {
+						"value": ""
+					},
+                    "nic2ServiceIPs": {
+                        "value": []
+                    }
+				},
+				"templateLink": {
+					"contentVersion": "1.1.0.0",
+					"uri": "[concat(parameters('templateBaseUrl'), parameters('artifactLocation'), 'modules/bigip-standalone/bigip.json')]"
+				}
+			},
+			"type": "Microsoft.Resources/deployments"
+		}
+	],
+	"outputs": {
+        "selfPrivateIp0": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.selfPrivateIp0.value]"
+		},
+        "selfPrivateIp1": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.selfPrivateIp1.value]"
+		},
+        "selfPrivateIp2": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.selfPrivateIp2.value]"
+		},
+        "selfPrivateIp3": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.selfPrivateIp3.value]"
+		},
+        "roleAssignmentID": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.roleAssignmentID.value]"
+		},
+		"vmID": {
+			"type": "string",
+			"value": "[reference('bigipTemplate').outputs.vmID.value]"
+		}
+	}
+}

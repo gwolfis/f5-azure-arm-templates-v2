@@ -48,7 +48,7 @@ This ARM template creates a BIG-IP Virtual Machine Scale Set (VMSS), configures 
 | customAutoscaleRules | No | Leave default to create Azure native CPU and throughput metric triggers. Enter an array of appropriate json to use custom triggers. See [this documentation](https://docs.microsoft.com/en-us/azure/templates/microsoft.insights/autoscalesettings) for valid json. **Note: when using custom triggers, parameters used to collect metric thresholds are not used.** |
 | customEmail | No | Enter an array of email addresses to be notified when scale up or scale down occurs. For example: ['myemail@email.com','myemail2@email.com']. |
 | dnsLabel | Yes | Unique DNS Name for the Public IP address used to access the Virtual Machine and postfix resource names. |
-| image | Yes |  There are two acceptable formats: Enter the URN of the image to use in Azure marketplace, or enter the ID of the custom image. An example URN value: 'f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.002000'. You can find the URNs of F5 marketplace images in the README for this template or by running the command: ``az vm image list --output yaml --publisher f5-networks --all``. See [this documentation](https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html) for information on creating a custom BIG-IP image. |
+| image | Yes |  There are two acceptable formats: Enter the URN of the image to use in Azure marketplace, or enter the ID of the custom image. An example URN value: 'f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.200000'. You can find the URNs of F5 marketplace images in the README for this template or by running the command: ``az vm image list --output yaml --publisher f5-networks --all``. See [this documentation](https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html) for information on creating a custom BIG-IP image. |
 | inboundMgmtNatPoolID | No | NAT pool ID used for the BIG-IP management GUI connections. Leave as default if you do not want to use natpools or are using public IP. |
 | inboundSshNatPoolID | No | NAT pool ID used for SSH connections to BIG-IP. Leave as default if you do not want to use natpools or are using public IP. |
 | instanceHealthProbeID | Yes | Enter the resource ID of the probe that you wish to use to determine instance health when performing a rolling upgrade of scale set instances. Use the default value if you are using a manual upgrade policy. Note: The probe must be associated with a load balancing rule. |
@@ -92,7 +92,7 @@ This ARM template creates a BIG-IP Virtual Machine Scale Set (VMSS), configures 
 - Note all quotes are escaped as parameter type expected is string.
 Example on one line:   
 ```json
-{\"runtime_parameters\":[{\"name\":\"HOST_NAME\",\"type\":\"metadata\",\"metadataProvider\":{\"environment\":\"azure\",\"type\":\"compute\",\"field\":\"name\"}}],\"pre_onboard_enabled\":[],\"post_onboard_enabled\":[{\"name\":\"sleep 300\",\"type\":\"inline\",\"commands\":[\"sleep 300\"]}],\"extension_packages\":{\"install_operations\":[{\"extensionType\":\"do\",\"extensionVersion\":\"1.13.0\",\"extensionHash\":\"e7c9acb0ddfc9e9949c48b9a8de686c365764f28347aacf194a6de7e3ed183be\"},{\"extensionType\":\"as3\",\"extensionVersion\":\"3.20.0\",\"extensionHash\":\"ba2db6e1c57d2ce6f0ca20876c820555ffc38dd0a714952b4266c4daf959d987\"},{\"extensionType\":\"ts\",\"extensionVersion\":\"1.12.0\",\"extensionHash\":\"d52ad1ca23df1d9c81a9e3641fc25b593dd0c0a17cc3a90316067ae78e41a990\"}]},\"extension_services\":{\"service_operations\":[{\"extensionType\":\"do\",\"type\":\"url\",\"value\":\"https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/autoscale_do_payg.json\"},{\"extensionType\":\"as3\",\"type\":\"url\",\"value\":\"https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/autoscale_as3.json\"},{\"extensionType\":\"ts\",\"type\":\"url\",\"value\":\"https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/autoscale_ts.json\"}]}}
+{\"runtime_parameters\":[{\"name\":\"HOST_NAME\",\"type\":\"metadata\",\"metadataProvider\":{\"environment\":\"azure\",\"type\":\"compute\",\"field\":\"name\"}}],\"pre_onboard_enabled\":[],\"post_onboard_enabled\":[{\"name\":\"sleep 300\",\"type\":\"inline\",\"commands\":[\"sleep 300\"]}],\"extension_packages\":{\"install_operations\":[{\"extensionType\":\"do\",\"extensionVersion\":\"1.16.0\",\"extensionHash\":\"536eccb9dbf40aeabd31e64da8c5354b57d893286ddc6c075ecc9273fcca10a1\"},{\"extensionType\":\"as3\",\"extensionVersion\":\"3.23.0\",\"extensionHash\":\"de615341b91beaed59195dceefc122932580d517600afce1ba8d3770dfe42d28\"},{\"extensionType\":\"ts\",\"extensionVersion\":\"1.15.0\",\"extensionHash\":\"333e11a30ba88699ac14bc1e9546622540a5e889c415d5d53a8aeaf98f6f872e\"}]},\"extension_services\":{\"service_operations\":[{\"extensionType\":\"do\",\"type\":\"url\",\"value\":\"https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/autoscale_do_payg.json\"},{\"extensionType\":\"as3\",\"type\":\"url\",\"value\":\"https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/autoscale_as3.json\"},{\"extensionType\":\"ts\",\"type\":\"url\",\"value\":\"https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/autoscale_ts.json\"}]}}
 ```
 - Same example expanded:
 
@@ -101,19 +101,19 @@ Example on one line:
   \"extension_packages\": {
     \"install_operations\": [
       {
-        \"extensionHash\": \"e7c9acb0ddfc9e9949c48b9a8de686c365764f28347aacf194a6de7e3ed183be\",
+        \"extensionHash\": \"536eccb9dbf40aeabd31e64da8c5354b57d893286ddc6c075ecc9273fcca10a1\",
         \"extensionType\": \"do\",
-        \"extensionVersion\": \"1.13.0\"
+        \"extensionVersion\": \"1.16.0\"
       },
       {
-        \"extensionHash\": \"ba2db6e1c57d2ce6f0ca20876c820555ffc38dd0a714952b4266c4daf959d987\",
+        \"extensionHash\": \"de615341b91beaed59195dceefc122932580d517600afce1ba8d3770dfe42d28\",
         \"extensionType\": \"as3\",
-        \"extensionVersion\": \"3.20.0\"
+        \"extensionVersion\": \"3.23.0\"
       },
       {
-        \"extensionHash\": \"d52ad1ca23df1d9c81a9e3641fc25b593dd0c0a17cc3a90316067ae78e41a990\",
+        \"extensionHash\": \"333e11a30ba88699ac14bc1e9546622540a5e889c415d5d53a8aeaf98f6f872e\",
         \"extensionType\": \"ts\",
-        \"extensionVersion\": \"1.12.0\"
+        \"extensionVersion\": \"1.15.0\"
       }
     ]
   },
@@ -362,7 +362,7 @@ Example on one line:
                 "My_ASM_Policy": {
                     "class": "WAF_Policy",
                     "ignoreChanges": true,
-                    "url": "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/generic_ready_template/Rapid_Depolyment_Policy_13_1.xml"
+                    "url": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml"
                 },
                 "class": "Application",
                 "serviceMain": {
@@ -404,5 +404,5 @@ Example on one line:
 ```
 ## Resource Creation Flow Chart
 
-![Resource Creation Flow Chart](https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/images/azure-bigip-module.png)
+![Resource Creation Flow Chart](https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/images/azure-bigip-autoscale-module.png)
 

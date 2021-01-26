@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"artifactLocation": {
 			"defaultValue": "f5-azure-arm-templates-v2/examples/",
@@ -48,7 +48,39 @@
 							"443"
 						]
 					},
-					"numberPublicAppIPAddresses": {
+					"nsg0": {
+						"value": [
+							{
+								"destinationPortRanges": ["22","8443"],
+								"sourceAddressPrefix": "*",
+								"protocol": "Tcp"
+							},
+							{
+								"destinationPortRanges": ["80","443"],
+								"sourceAddressPrefix": "*",
+								"protocol": "Tcp"
+							}
+						]
+					},
+					"nsg1": {
+						"value": [
+							{
+								"destinationPortRanges": ["80","443"],
+								"sourceAddressPrefix": "*",
+								"protocol": "Tcp"
+							}
+						]
+					},
+					"nsg2": {
+						"value": [
+							{
+								"destinationPortRanges": ["80","443"],
+								"sourceAddressPrefix": "*",
+								"protocol": "Tcp"
+							}
+						]
+					},
+					"numberPublicExternalIPAddresses": {
 						"value": 1
 					},
 					"numberPublicMgmtIPAddresses": {
@@ -65,7 +97,7 @@
 					}
 				},
 				"templateLink": {
-					"contentVersion": "1.0.0.0",
+					"contentVersion": "1.2.0.0",
 					"uri": "[concat(parameters('templateBaseUrl'), parameters('artifactLocation'), 'modules/dag/dag.json')]"
 				}
 			},
@@ -73,13 +105,13 @@
 		}
 	],
 	"outputs": {
-		"appIpIds": {
+		"externalIpIds": {
 			"type": "array",
-			"value": "[reference('dagTemplate').outputs.appIpIds.value]"
+			"value": "[reference('dagTemplate').outputs.externalIpIds.value]"
 		},
-		"appIps": {
+		"externalIps": {
 			"type": "array",
-			"value": "[reference('dagTemplate').outputs.appIps.value]"
+			"value": "[reference('dagTemplate').outputs.externalIps.value]"
 		},
 		"externalBackEndLoadBalancerID": {
 			"type": "string",
@@ -120,6 +152,18 @@
 		"mgmtIps": {
 			"type": "array",
 			"value": "[reference('dagTemplate').outputs.mgmtIps.value]"
+		},
+		"nsg0Id": {
+			"type": "string",
+			"value": "[reference('dagTemplate').outputs.nsg0Id.value]"
+		},
+		"nsg1Id": {
+			"type": "string",
+			"value": "[reference('dagTemplate').outputs.nsg1Id.value]"
+		},
+		"nsg2Id": {
+			"type": "string",
+			"value": "[reference('dagTemplate').outputs.nsg2Id.value]"
 		}
 	}
 }

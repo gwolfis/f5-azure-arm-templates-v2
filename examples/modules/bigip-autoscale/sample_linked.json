@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"artifactLocation": {
 			"defaultValue": "f5-azure-arm-templates-v2/examples/",
@@ -46,7 +46,7 @@
 						"value": "appDns"
 					},
 					"image": {
-						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
 					},
 					"inboundMgmtNatPoolID": {
 						"value": ""
@@ -128,7 +128,7 @@
 					}
 				},
 				"templateLink": {
-					"contentVersion": "1.0.0.0",
+					"contentVersion": "1.2.0.0",
 					"uri": "[concat(parameters('templateBaseUrl'), parameters('artifactLocation'), 'modules/bigip-autoscale/bigip.json')]"
 				}
 			},

@@ -1,47 +1,19 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
+    "contentVersion": "1.2.0.0",
     "parameters": {
-        "appNsg": {
-            "defaultValue": "Default",
-            "type": "String",
+        "createNatGateway": {
+            "defaultValue": false,
             "metadata": {
-                "description": "Valid values include 'Default', 'None' or an existing network security group name. A value of 'Default' creates a application security group and attaches it to the application network. A specified security group is associated to application network."
-            }
-        },
-        "mgmtNsg": {
-            "defaultValue": "Default",
-            "type": "String",
-            "metadata": {
-                "description": "Valid values include 'Default', 'None', or an existing network security group name. A value of 'Default' creates a management security group and attaches it to the management network. A specified security group is associated to management network."
-            }
+                "description": "You must select Yes to create a NAT gateway to allow outbound access when deploying a standalone BIG-IP VE without a public management IP address. Note: The NAT gateway is applied to subnet0."
+            },
+            "type": "bool"
         },
         "numSubnets": {
             "defaultValue": 1,
             "type": "Int",
             "metadata": {
                 "description": "Indicate the number of subnets to create."
-            }
-        },
-        "provisionPublicIP": {
-            "defaultValue": false,
-            "type": "Bool",
-            "metadata": {
-                "description": "Valid values include true or false. When set to false, internet traffic is denied. When set to true, internet traffic is allowed."
-            }
-        },
-        "restrictedSrcMgmtAddress": {
-            "defaultValue": "*",
-            "type": "String",
-            "metadata": {
-                "description": "When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources"
-            }
-        },
-        "restrictedSrcMgmtPort": {
-            "defaultValue": "443",
-            "type": "String",
-            "metadata": {
-                "description": "When creating management security group, this field specifies port used to access BIG-IP admin portal."
             }
         },
         "virtualNetworkName": {
@@ -73,184 +45,84 @@
         }
     },
     "variables": {
-        "appSecurityGroupName": "[if(equals(parameters('appNsg'), 'Default'), 'appNSG', concat(parameters('appNsg'), '-appNsg'))]",
-        "appSecurityRules": [
-            {
-                "name": "app_allow_http",
-                "properties": {
-                    "access": "Allow",
-                    "description": "Un-encrypted Web Application",
-                    "destinationAddressPrefix": "*",
-                    "destinationPortRange": "80",
-                    "direction": "Inbound",
-                    "priority": 110,
-                    "protocol": "Tcp",
-                    "sourceAddressPrefix": "*",
-                    "sourcePortRange": "*"
-                }
-            },
-            {
-                "name": "app_allow_https",
-                "properties": {
-                    "access": "Allow",
-                    "description": "Encrypted Web Application",
-                    "destinationAddressPrefix": "*",
-                    "destinationPortRange": "443",
-                    "direction": "Inbound",
-                    "priority": 111,
-                    "protocol": "Tcp",
-                    "sourceAddressPrefix": "*",
-                    "sourcePortRange": "*"
-                }
-            },
-            {
-                "name": "allow_loadBalancer_traffic",
-                "properties": {
-                    "access": "Allow",
-                    "description": "Outbound traffic through load balancer",
-                    "destinationAddressPrefix": "AzureLoadBalancer",
-                    "destinationPortRange": "*",
-                    "direction": "Outbound",
-                    "priority": 110,
-                    "protocol": "Tcp",
-                    "sourceAddressPrefix": "*",
-                    "sourcePortRange": "*"
-                }
-            },
-            {
-                "name": "internet_traffic",
-                "properties": {
-                    "access": "[if(parameters('provisionPublicIP'), 'Allow', 'Deny')]",
-                    "description": "All TCP Internet Traffic to Application",
-                    "destinationAddressPrefix": "*",
-                    "destinationPortRange": "*",
-                    "direction": "Inbound",
-                    "priority": 113,
-                    "protocol": "Tcp",
-                    "sourceAddressPrefix": "Internet",
-                    "sourcePortRange": "*"
-                }
-            }
-        ],
-        "appSubnet": [
-            {
-                "name": "appSubnet",
-                "properties": {
-                    "addressPrefix": "[concat(parameters('vnetAddressPrefix'), '.1.0/24')]"
-                }
-            }
-        ],
-        "appSubnetNsg": [
-            {
-                "name": "appSubnet",
-                "properties": {
-                    "addressPrefix": "[concat(parameters('vnetAddressPrefix'), '.1.0/24')]",
-                    "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('appSecurityGroupName'))]"
-                    }
-                }
-            }
-        ],
-        "calcNumSubnets": "[if(lessOrEquals(sub(parameters('numSubnets'), 2), 0), 0, sub(parameters('numSubnets'), 2))]",
-        "combineSecurityRules": "[union(variables('mgmtSecurityRules'), variables('appSecurityRules'))]",
         "copy": [
             {
-                "count": "[variables('calcNumSubnets')]",
+                "count": "[parameters('numSubnets')]",
                 "input": {
-                    "name": "[concat('subnet', copyIndex('constructSubnetArray', 2))]",
+                    "name": "[concat('subnet', copyIndex('constructSubnetArray'))]",
                     "properties": {
-                        "addressPrefix": "[concat(parameters('vnetAddressPrefix'), '.', copyIndex('constructSubnetArray', 2),'.0/24')]"
+                        "addressPrefix": "[concat(parameters('vnetAddressPrefix'), '.', copyIndex('constructSubnetArray'),'.0/24')]",
+                        "routeTable": {
+                            "id": "[resourceId('Microsoft.Network/routeTables', concat('routeTable-subnet', copyIndex('constructSubnetArray')))]"
+                        },
+                        "natGateway": "[if(and(equals(copyIndex('constructSubnetArray'), 0), parameters('createNatGateway')), json(concat('{\"id\": \"', resourceId('Microsoft.Network/natGateways', variables('natGatewayName')), '\"}')), json('null'))]"             
                     }
                 },
                 "name": "constructSubnetArray"
             }
-        ],
-        "mgmtId": "[if(equals(parameters('mgmtNsg'), 'None'), json('null'), resourceId('Microsoft.Network/networkSecurityGroups', variables('mgmtSecurityGroupName')))]",
-        "mgmtSecurityGroupName": "[if(equals(parameters('mgmtNsg'), 'Default'), 'mgmtNSG', concat(parameters('mgmtNsg'), '-mgmtNsg'))]",
-        "mgmtSecurityRules": [
-            {
-                "name": "mgmt_allow_https",
-                "properties": {
-                    "access": "Allow",
-                    "description": "BIG-IP Admin Portal",
-                    "destinationAddressPrefix": "*",
-                    "destinationPortRange": "[parameters('restrictedSrcMgmtPort')]",
-                    "direction": "Inbound",
-                    "priority": 101,
-                    "protocol": "Tcp",
-                    "sourceAddressPrefix": "[parameters('restrictedSrcMgmtAddress')]",
-                    "sourcePortRange": "*"
-                }
-            },
-            {
-                "name": "mgmt_allow_ssh",
-                "properties": {
-                    "access": "Allow",
-                    "description": "BIG-IP SSH",
-                    "destinationAddressPrefix": "*",
-                    "destinationPortRange": "22",
-                    "direction": "Inbound",
-                    "priority": 102,
-                    "protocol": "Tcp",
-                    "sourceAddressPrefix": "[parameters('restrictedSrcMgmtAddress')]",
-                    "sourcePortRange": "*"
-                }
-            }
-        ],
-        "mgmtSubnet": [
-            {
-                "name": "mgmtSubnet",
-                "properties": {
-                    "addressPrefix": "[concat(parameters('vnetAddressPrefix'), '.0.0/24')]"
-                }
-            }
-        ],
-        "mgmtSubnetNsg": [
-            {
-                "name": "mgmtSubnet",
-                "properties": {
-                    "addressPrefix": "[concat(parameters('vnetAddressPrefix'), '.0.0/24')]",
-                    "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('mgmtSecurityGroupName'))]"
-                    }
-                }
-            }
-        ],
-        "networkApiVersion": "2019-11-01",
-        "subnetArray": "[if(equals(parameters('numSubnets'), 1), if(equals(parameters('mgmtNsg'), 'None'), variables('mgmtSubnet'), variables('mgmtSubnetNsg')), union(if(equals(parameters('mgmtNsg'), 'None'), variables('mgmtSubnet'), variables('mgmtSubnetNsg')), if(equals(parameters('appNsg'), 'None'), variables('appSubnet'), variables('appSubnetNsg')), variables('constructSubnetArray')))]"
+        ],       
+        "networkApiVersion": "2020-06-01",
+        "natGatewayName": "[concat(parameters('virtualNetworkName'), '-natgw')]",
+        "natGatewayPublicIpName": "[concat(parameters('virtualNetworkName'), '-natgw-pip')]"
     },
     "resources": [
         {
-            "type": "Microsoft.Network/networkSecurityGroups",
+            "type": "Microsoft.Network/routeTables",
             "apiVersion": "[variables('networkApiVersion')]",
-            "name": "[variables('mgmtSecurityGroupName')]",
-            "location": "[resourceGroup().location]",
-            "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
-            "properties": {
-                "securityRules": "[if(lessOrEquals(parameters('numSubnets'), 2), variables('combineSecurityRules'), variables('mgmtSecurityRules'))]"
+            "copy": {
+                "name": "routeTableLoop",
+                "count": "[parameters('numSubnets')]"
             },
-            "condition": "[not(equals(parameters('mgmtNsg'), 'None'))]"
+            "name": "[concat('routeTable-subnet', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]"
         },
         {
-            "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "[variables('networkApiVersion')]",
-            "name": "[variables('appSecurityGroupName')]",
+            "condition": "[parameters('createNatGateway')]",
             "location": "[resourceGroup().location]",
-            "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
+            "name": "[variables('natGatewayPublicIpName')]",
             "properties": {
-                "securityRules": "[variables('appSecurityRules')]"
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
             },
-            "condition": "[not(equals(parameters('appNsg'), 'None'))]"
+            "sku": {
+                "name": "Standard"
+            },
+            "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
+            "type": "Microsoft.Network/publicIPAddresses"
+        },
+        {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('natGatewayPublicIpName'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "condition": "[parameters('createNatGateway')]",
+            "name": "[variables('natGatewayName')]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "idleTimeoutInMinutes": 4,
+                "publicIpAddresses": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('natGatewayPublicIpName'))]"
+                    }
+                ]
+            },
+            "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
+            "type": "Microsoft.Network/natGateways"
         },
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "[variables('networkApiVersion')]",
+            "dependsOn": [
+                "routeTableLoop",
+                "[resourceId('Microsoft.Network/natGateways', variables('natGatewayName'))]"
+            ],
             "name": "[parameters('virtualNetworkName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[variables('mgmtSecurityGroupName')]",
-                "[variables('appSecurityGroupName')]"
-            ],
             "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
             "properties": {
                 "addressSpace": {
@@ -258,35 +130,28 @@
                         "[concat(parameters('vnetAddressPrefix'), '.0.0/16')]"
                     ]
                 },
-                "subnets": "[variables('subnetArray')]"
+                "subnets": "[variables('constructSubnetArray')]"
             }
         }
     ],
     "outputs": {
-        "appNSG": {
-            "condition": "[not(equals(parameters('appNsg'), 'None'))]",
-            "type": "String",
-            "value": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('appSecurityGroupName'))]"
+        "routeTables": {
+            "condition": "[greaterOrEquals(parameters('numSubnets'), 1)]",
+            "copy": {
+                "count": "[parameters('numSubnets')]",
+                "input": "[resourceId('Microsoft.Network/routeTables', concat('routeTable-subnet', copyIndex()))]"
+            },
+            "type": "Array"
         },
-        "appSubnet": {
-            "condition": "[greaterOrEquals(parameters('numSubnets'), 2)]",
+        "natGateway": {
             "type": "String",
-            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'appSubnet')]"
-        },
-        "mgmtNSG": {
-            "condition": "[not(equals(parameters('mgmtNsg'), 'None'))]",
-            "type": "String",
-            "value": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('mgmtSecurityGroupName'))]"
-        },
-        "mgmtSubnet": {
-            "type": "String",
-            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), 'mgmtSubnet')]"
+            "value": "[resourceId('Microsoft.Network/natGateways', variables('natGatewayName'))]"
         },
         "subnets": {
-            "condition": "[greaterOrEquals(parameters('numSubnets'), 3)]",
+            "condition": "[greaterOrEquals(parameters('numSubnets'), 1)]",
             "copy": {
-                "count": "[variables('calcNumSubnets')]",
-                "input": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), concat('subnet', copyIndex(2)))]"
+                "count": "[parameters('numSubnets')]",
+                "input": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), concat('subnet', copyIndex()))]"
             },
             "type": "Array"
         },

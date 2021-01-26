@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
-  "contentVersion": "1.2.0.0",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
       "defaultValue": "azureuser",
@@ -45,7 +45,7 @@
       "type": "string"
     },
     "image": {
-      "defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000",
+      "defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000",
       "metadata": {
         "description": "2 formats accepted. URN of the image to use in Azure marketplace or id of custom image. Example URN value: f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.002000. You can find the URNs of F5 marketplace images in the README for this template or by running the command: az vm image list --output yaml --publisher f5-networks --all. See https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html for information on creating custom bigip image."
       },
@@ -215,7 +215,7 @@
       "type": "string"
     },
     "vmScaleSetMaxCount": {
-      "defaultValue": 4,
+      "defaultValue": 10,
       "metadata": {
         "description": "The maximum number of BIG-IP VEs that can be deployed into the VM Scale Set."
       },
@@ -319,7 +319,7 @@
       }
     ],
     "computeApiVersion": "2019-12-01",
-    "customData": "[base64(concat('#!/bin/bash -x\n\n# Log to local file and serial console\nmkdir -p /var/log/cloud /config/cloud /var/config/rest/downloads\nLOG_FILE=/var/log/cloud/startup-script.log\ntouch ${LOG_FILE}\nnpipe=/tmp/$$.tmp\ntrap \"rm -f $npipe\" EXIT\nmknod $npipe p\ntee <$npipe -a ${LOG_FILE} /dev/ttyS0 &\nexec 1>&-\nexec 1>$npipe\nexec 2>&1\n\necho \"$(date  +\"%Y-%m-%dT%H:%M:%S.%3NZ\") : Starting Custom Script\"\n# Optional optimizations required as early in boot as possible before mcpd starts\n/usr/bin/setdb provision.extramb 500\n/usr/bin/setdb restjavad.useextramb true\n\n# VARS FROM TEMPLATE\nPACKAGE_URL=', variables('singleQuote'), variables('runtimeInitUrl'), variables('singleQuote'), '\nRUNTIME_CONFIG=',  variables('singleQuote'), parameters('runtimeConfig'), variables('singleQuote'), '\n\n# Render or download f5-bigip-runtime-init config\nif [[ \"${RUNTIME_CONFIG}\" =~ ^http.* ]]; then\n  curl -sfv --retry 60 --connect-timeout 5 -L \"${RUNTIME_CONFIG}\" -o /config/cloud/runtime-init.conf\nelse\n  printf ', variables('singleQuote'), '%s\\n', variables('singleQuote'), ' \"${RUNTIME_CONFIG}\" | jq . > /config/cloud/runtime-init.conf\nfi\n\n# Download and install f5-bigip-runtime-init package\nif [[ ! -s \"/var/config/rest/downloads/${PACKAGE_URL##*/}\" ]]; then\n  for i in {1..30}; do\n    curl -fv --retry 1 --connect-timeout 5 -L \"${PACKAGE_URL}\" -o \"/var/config/rest/downloads/${PACKAGE_URL##*/}\" && break || sleep 10\n  done\nfi\nbash \"/var/config/rest/downloads/${PACKAGE_URL##*/}\" -- ', variables('singleQuote'), '--cloud azure', variables('singleQuote'), '\n\n# Run\nf5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf\n'))]",
+    "customData": "[base64(concat('#!/bin/bash -x\n\n# Log to local file and serial console\nmkdir -p /var/log/cloud /config/cloud /var/config/rest/downloads\nLOG_FILE=/var/log/cloud/startup-script.log\ntouch ${LOG_FILE}\nnpipe=/tmp/$$.tmp\ntrap \"rm -f $npipe\" EXIT\nmknod $npipe p\ntee <$npipe -a ${LOG_FILE} /dev/ttyS0 &\nexec 1>&-\nexec 1>$npipe\nexec 2>&1\n\n# Optional optimizations required as early as possible in boot before MCPD starts\n/usr/bin/setdb provision.extramb 500\n/usr/bin/setdb restjavad.useextramb true\n\n# VARS FROM TEMPLATE\nPACKAGE_URL=', variables('singleQuote'), variables('runtimeConfigUrl'), variables('singleQuote'), '\nRUNTIME_CONFIG=',  variables('singleQuote'), parameters('runtimeConfig'), variables('singleQuote'), '\n\n# Render or download f5-bigip-runtime-init config\nif [[ \"${RUNTIME_CONFIG}\" =~ ^http.* ]]; then\n  curl -sv --retry 60 --connect-timeout 5 --fail -L \"${RUNTIME_CONFIG}\" -o /config/cloud/runtime-init.conf\nelse\n  printf ', variables('singleQuote'), '%s\\n', variables('singleQuote'), ' \"${RUNTIME_CONFIG}\" | jq . > /config/cloud/runtime-init.conf\nfi\n\n# Download and install f5-bigip-runtime-init package\nif [[ ! -s \"/var/config/rest/downloads/${PACKAGE_URL##*/}\" ]]; then\n  for i in {1..30}; do\n    curl -v --retry 1 --connect-timeout 5 --fail -L \"${PACKAGE_URL}\" -o \"/var/config/rest/downloads/${PACKAGE_URL##*/}\" && break || sleep 10\n  done\nfi\nbash \"/var/config/rest/downloads/${PACKAGE_URL##*/}\" -- ', variables('singleQuote'), '--cloud azure', variables('singleQuote'), '\n\n# Run\nf5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf\n'))]",
     "deploymentScript": "[resourceId('Microsoft.Resources/deploymentScripts', variables('deploymentScriptName'))]",
     "deploymentScriptName": "[concat(variables('appInsightsName'), '-metric-stub')]",
     "diagnosticsStorageAccountName": "[concat(uniqueString(parameters('dnsLabel'), resourceGroup().id, deployment().name), 'data000')]",
@@ -369,7 +369,7 @@
     "offerToUse": "[if(variables('useCustomImage'), json('null'), variables('image')[1])]",
     "roleAssignmentsApiVersion": "2017-09-01",
     "rollingUpgrade": "[not(empty(parameters('instanceHealthProbeID')))]",
-    "runtimeInitUrl": "https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.1.0/dist/f5-bigip-runtime-init-1.1.0-1.gz.run",
+    "runtimeConfigUrl": "https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/develop/develop/dist/f5-bigip-runtime-init-1.1.0-1.gz.run",
     "scaleInTimeWindow": "[concat('PT', parameters('scaleInTimeWindow'), 'M')]",
     "scaleOutTimeWindow": "[concat('PT', parameters('scaleOutTimeWindow'), 'M')]",
     "singleQuote": "'",
@@ -479,10 +479,10 @@
           },
           "storageProfile": "[if(variables('useCustomImage'), variables('storageProfileArray').customImage, variables('storageProfileArray').platformImage)]",
           "diagnosticsProfile": {
-            "bootDiagnostics": {
-              "enabled": true,
-              "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net')]"
-            }
+              "bootDiagnostics": {
+                  "enabled": true,
+                  "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net')]"
+              }
           }
         }
       },
@@ -496,19 +496,19 @@
       "zones": "[if(parameters('useAvailabilityZones'), createArray(1, 2, 3), json('null'))]"
     },
     {
-      "apiVersion": "[variables('storageApiVersion')]",
-      "kind": "Storage",
-      "location": "[resourceGroup().location]",
-      "name": "[variables('diagnosticsStorageAccountName')]",
-      "properties": {
-        "supportsHttpsTrafficOnly": true
-      },
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
-      "type": "Microsoft.Storage/storageAccounts"
+        "apiVersion": "[variables('storageApiVersion')]",
+        "kind": "Storage",
+        "location": "[resourceGroup().location]",
+        "name": "[variables('diagnosticsStorageAccountName')]",
+        "properties": {
+            "supportsHttpsTrafficOnly": true
+        },
+        "sku": {
+            "name": "Standard_LRS",
+            "tier": "Standard"
+        },
+        "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
+        "type": "Microsoft.Storage/storageAccounts"
     },
     {
       "apiVersion": "[variables('appInsightsApiVersion')]",
