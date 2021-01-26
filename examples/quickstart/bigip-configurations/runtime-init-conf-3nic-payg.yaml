@@ -114,6 +114,7 @@ extension_services:
           remark: HTTPwithcustompersistence
           schemaVersion: 3.0.0
         persist: true
+pre_onboard_enabled: []
 post_onboard_enabled:
   - name: create_metadata_route
     type: inline
