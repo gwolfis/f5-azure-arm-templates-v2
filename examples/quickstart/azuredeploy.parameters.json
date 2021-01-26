@@ -24,7 +24,7 @@
 			"value": 1
 		},
 		"runtimeConfig": {
-			"value": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml"
+			"value": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/quickstart/bigip-configurations/runtime-init-conf-3nic-payg.yaml"
 		},
 		"restrictedSrcMgmtAddress": {
 			"value": ""
