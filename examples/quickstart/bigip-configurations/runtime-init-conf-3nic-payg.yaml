@@ -18,6 +18,14 @@ extension_services:
         label: Standalone 3NIC BIG-IP declaration for Declarative Onboarding with PAYG license that uses custom DNS servers
         Common:
           class: Tenant
+          dbVars:
+            class: DbVariables
+            config.allow.rfc3927: enable
+            dhclient.mgmt: disable
+          default:
+            class: Route
+            gw: 10.0.1.1
+            network: default
           myDns:
             class: DNS
             nameServers:
@@ -69,10 +77,6 @@ extension_services:
             vlan: internal
             allowService: default
             trafficGroup: traffic-group-local-only
-          default:
-            class: Route
-            gw: 10.0.1.1
-            mtu: 1500
     - extensionType: as3
       type: inline
       value:
@@ -110,7 +114,13 @@ extension_services:
           remark: HTTPwithcustompersistence
           schemaVersion: 3.0.0
         persist: true
-post_onboard_enabled: []
+post_onboard_enabled:
+  - name: create_metadata_route
+    type: inline
+    commands:
+    - tmsh create sys management-route azureMetadata network 169.254.169.254/32 gateway
+      10.0.0.1
+    - tmsh save sys config
 pre_onboard_enabled:
   - name: provision_rest
     type: inline
