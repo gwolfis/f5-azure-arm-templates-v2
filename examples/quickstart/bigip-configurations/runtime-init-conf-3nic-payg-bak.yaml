@@ -15,7 +15,7 @@ extension_services:
         schemaVersion: 1.0.0
         class: Device
         async: true
-        label: Standalone 2NIC BIG-IP declaration for Declarative Onboarding with BYOL license that uses custom DNS servers
+        label: Standalone 3NIC BIG-IP declaration for Declarative Onboarding with PAYG license that uses custom DNS servers
         Common:
           class: Tenant
           dbVars:
@@ -39,10 +39,6 @@ extension_services:
             autoPhonehome: true
             class: System
             hostname: '{{{ HOST_NAME }}}.local'
-          myLicense:
-            class: License
-            licenseType: regKey
-            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
           myProvisioning:
             class: Provision
             ltm: nominal
@@ -61,12 +57,25 @@ extension_services:
             mtu: 1500
             interfaces:
               - name: '1.1'
-                tagged: false
+                tagged: true
           external-self:
             class: SelfIp
             address: '{{{ SELF_IP_EXTERNAL }}}'
             vlan: external
             allowService: none
+            trafficGroup: traffic-group-local-only
+          internal:
+            class: VLAN
+            tag: 4093
+            mtu: 1500
+            interfaces:
+              - name: '1.2'
+                tagged: true
+          internal-self:
+            class: SelfIp
+            address: '{{{ SELF_IP_INTERNAL }}}'
+            vlan: internal
+            allowService: default
             trafficGroup: traffic-group-local-only
     - extensionType: as3
       type: inline
@@ -95,7 +104,7 @@ extension_services:
                 class: Pool
                 members:
                   - serverAddresses:
-                      - 10.0.2.4
+                      - 10.0.3.4
                     servicePort: 80
                 monitors:
                   - http
@@ -137,3 +146,10 @@ runtime_parameters:
       type: network
       field: ipv4
       index: 1
+  - name: SELF_IP_INTERNAL
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: network
+      field: ipv4
+      index: 2
