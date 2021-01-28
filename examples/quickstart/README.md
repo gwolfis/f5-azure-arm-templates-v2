@@ -336,16 +336,6 @@ For information on getting started using F5's ARM templates on GitHub, see [Micr
 | vip2PublicUrlHttp | Service (VIP) Public HTTP URL | Application Template | string |
 | vip2PrivateUrlHttps | Service (VIP) Private HTTPS URL | Application Template | string |
 | vip2PublicUrlHttps | Service (VIP) Public HTTPS URL | Application Template | string |
-| vip3PrivateIp | Service (VIP) Private IP Address | Application Template | string |
-| vip3PublicIp | Service (VIP) Public IP Address | Application Template | string |
-| vip3PublicIPDns | Service (VIP) Public DNS | Application Template | string |
-| vip3PrivateUrlHttp | Service (VIP) Private HTTP URL | Application Template | string |
-| vip3PublicUrlHttp | Service (VIP) Public HTTP URL | Application Template | string |
-| vip3PrivateUrlHttps | Service (VIP) Private HTTPS URL | Application Template | string |
-| vip3PublicUrlHttps | Service (VIP) Public HTTPS URL | Application Template | string |
-| vip4PrivateIp | Service (VIP) Private IP Address | Application Template | string |
-| vip4PrivateUrlHttp | Service (VIP) Private HTTP URL | Application Template | string |
-| vip4PrivateUrlHttps | Service (VIP) Private HTTPS URL | Application Template | string |
 | appUsername | Application user name | Application Template | string |
 | vmId | Virtual Machine resource ID | BIG-IP Template | string |
 | bigipUsername | BIG-IP user name | BIG-IP Template | string |

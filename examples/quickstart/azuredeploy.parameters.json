@@ -30,7 +30,7 @@
 			"value": true
 		},
 		"numberPublicExternalIPAddresses": {
-			"value": 4
+			"value": 3
 		},
 		"bigIpRuntimeInitConfig": {
 			"value": "https://raw.githubusercontent.com/f5networks/f5-azure-arm-templates-v2/v0.0.2/examples/quickstart/bigip-configurations/runtime-init-conf-3nic-payg.yaml"

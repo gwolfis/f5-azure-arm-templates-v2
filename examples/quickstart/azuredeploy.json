@@ -17,14 +17,13 @@
 			"type": "string"
 		},
 		"uniqueString": {
-			"defaultValue": "",
 			"metadata": {
 				"description": "A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
 			},
 			"type": "string"
 		},
 		"image": {
-			"defaultValue": "f5-networks:f5-big-ip-byol:f5-big-all-2slot-byol:15.1.200000",
+			"defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly-f5:15.1.200000",
 			"metadata": {
 				"description": "2 formats accepted. URN of the image to use in Azure marketplace or id of custom image. Example URN value: f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.002000. You can find the URNs of F5 marketplace images in the README for this template or by running the command: az vm image list --output yaml --publisher f5-networks --all. See https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html for information on creating custom bigip image."
 			},
@@ -56,7 +55,7 @@
 				2,
 				3
 			],
-			"defaultValue": 1,
+			"defaultValue": 3,
 			"metadata": {
 				"description": "Enter valid number of network interfaces to create on the BIG-IP VE instance."
 			},
@@ -76,14 +75,13 @@
 				3,
 				4
 			],
-			"defaultValue": 1,
+			"defaultValue": 3,
 			"metadata": {
 				"description": "Enter valid number of external public IP addresses to create on the BIG-IP VE instance."
 			},
 			"type": "int"
 		},
 		"restrictedSrcAddressMgmt": {
-			"defaultValue": "",
 			"metadata": {
 				"description": "When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources."
 			},
@@ -97,7 +95,7 @@
 			"type": "string"
 		},
 		"useAvailabilityZones": {
-			"defaultValue": true,
+			"defaultValue": false,
 			"metadata": {
 				"description": "This deployment can deploy resources into Azure Availability Zones (if the region supports it).  If that is not desired the input should be set 'No'. If the region does not support availability zones the input should be set to No."
 			},
@@ -378,50 +376,6 @@
 			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 3)]",
             "type": "string",
             "value": "[concat('https://', reference('dagTemplate').outputs.externalIps.value[2], '/')]"
-        },
-		"vip3PrivateIp": {
-            "type": "string",
-            "value": "[variables('nic1ServiceIP3')]"
-        },
-		"vip3PublicIp": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 4)]",
-            "type": "string",
-            "value": "[reference('dagTemplate').outputs.externalIps.value[3]]"
-        },
-		"vip3PublicIPDns": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 4)]",
-            "type": "string",
-            "value": "[reference('dagTemplate').outputs.externalIpDns.value[3]]"
-        },
-		"vip3PrivateUrlHttp": {
-            "type": "string",
-            "value": "[concat('http://', variables('nic1ServiceIP3'), '/')]"
-        },
-		"vip3PublicUrlHttp": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 4)]",
-            "type": "string",
-            "value": "[concat('http://', reference('dagTemplate').outputs.externalIps.value[3], '/')]"
-        },
-		"vip3PrivateUrlHttps": {
-            "type": "string",
-            "value": "[concat('https://', variables('nic1ServiceIP3'), '/')]"
-        },
-		"vip3PublicUrlHttps": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 4)]",
-            "type": "string",
-            "value": "[concat('https://', reference('dagTemplate').outputs.externalIps.value[3], '/')]"
-        },
-		"vip4PrivateIp": {
-            "type": "string",
-            "value": "[variables('nic2ServiceIP1')]"
-        },
-		"vip4PrivateUrlHttp": {
-            "type": "string",
-            "value": "[concat('http://', variables('nic2ServiceIP1'), '/')]"
-        },
-		"vip4PrivateUrlHttps": {
-            "type": "string",
-            "value": "[concat('https://', variables('nic2ServiceIP1'), '/')]"
         },
 		"appUsername": {
 			"condition": "[variables('provisionApp')]",
