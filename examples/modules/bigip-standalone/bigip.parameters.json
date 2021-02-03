@@ -3,16 +3,16 @@
 	"contentVersion": "1.1.0.0",
 	"parameters": {
 		"adminUsername": {
-			"value": "azureuser"
+			"value": "my-admin"
 		},
 		"image": {
-			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
 		},
 		"instanceType": {
-			"value": "Standard_DS2_v2"
+			"value": "Standard_D2s_v3"
 		},
         "loadBalancerBackendAddressPoolsArray": {
-            "value": [],
+            "value": []
         },
         "mgmtSubnetId": {
 			"value": ""
@@ -59,7 +59,7 @@
 		"roleDefinitionId": {
 			"value": ""
 		},
-		"runtimeConfig": {
+		"bigIpRuntimeInitConfig": {
 			"value": ""
 		},
 		"sshKey": {
@@ -75,7 +75,7 @@
 			}
 		},
         "uniqueString": {
-			"value": "myString"
+			"value": ""
 		},
 		"useAvailabilityZones": {
 			"value": "Yes"
@@ -84,7 +84,7 @@
 			"value": ""
 		},
 		"vmName": {
-			"value": "bigip-vm"
+			"value": ""
 		}
 	}
 }

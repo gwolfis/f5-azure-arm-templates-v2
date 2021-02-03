@@ -3,7 +3,7 @@
 	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"dnsLabel": {
-			"value": "appDns"
+			"value": "test.dns.value"
 		},
 		"externalLoadBalancerName": {
 			"value": "None"
@@ -23,10 +23,10 @@
 				"443"
 			]
 		},
-		"numberPublicExternalIPAddresses": {
+		"numberPublicExternalIpAddresses": {
 			"value": 1
 		},
-		"numberPublicMgmtIPAddresses": {
+		"numberPublicMgmtIpAddresses": {
 			"value": 0
 		},
 		"nsg0": {

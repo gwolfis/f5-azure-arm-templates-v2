@@ -32,7 +32,7 @@ This ARM template creates a virtual network, subnets, and route tables required 
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| virtualNetworkName | Yes | Name used to create virtual network. |
+| vnetName| Yes | Name used to create virtual network. |
 | vnetAddressPrefix | Yes | Enter the start of the CIDR block used when creating the Vnet and subnets.  You MUST type just the first two octets of the /16 virtual network that will be created, for example '10.0', '10.100', 192.168'." |
 | numSubnets| Yes | Number of subnets to create. A route table resource will be created and associated with each subnet resource. |
 | createNatGateway | No | You must select Yes to create a NAT gateway to allow outbound access when deploying a standalone BIG-IP VE without a public management IP address. Note: The NAT gateway is applied to subnet0. |

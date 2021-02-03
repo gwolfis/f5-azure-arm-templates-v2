@@ -18,6 +18,14 @@ extension_services:
         label: Standalone 3NIC BIG-IP declaration for Declarative Onboarding with PAYG license that uses custom DNS servers
         Common:
           class: Tenant
+          dbVars:
+            class: DbVariables
+            config.allow.rfc3927: enable
+            dhclient.mgmt: disable
+          default:
+            class: Route
+            gw: 10.0.1.1
+            network: default
           myDns:
             class: DNS
             nameServers:
@@ -35,10 +43,13 @@ extension_services:
             class: Provision
             ltm: nominal
             asm: nominal
-          admin:
+          quickstart:
             class: User
             userType: regular
-            password: '{{{ BIGIP_PASSWORD }}}'
+            partitionAccess:
+              all-partitions:
+                role: admin
+            password: '{{{ HOST_NAME }}}'
             shell: bash
           external:
             class: VLAN
@@ -46,7 +57,7 @@ extension_services:
             mtu: 1500
             interfaces:
               - name: '1.1'
-                tagged: true
+                tagged: false
           external-self:
             class: SelfIp
             address: '{{{ SELF_IP_EXTERNAL }}}'
@@ -59,7 +70,7 @@ extension_services:
             mtu: 1500
             interfaces:
               - name: '1.2'
-                tagged: true
+                tagged: false
           internal-self:
             class: SelfIp
             address: '{{{ SELF_IP_INTERNAL }}}'
@@ -93,7 +104,7 @@ extension_services:
                 class: Pool
                 members:
                   - serverAddresses:
-                      - 10.0.1.4
+                      - 10.0.3.4
                     servicePort: 80
                 monitors:
                   - http
@@ -103,7 +114,13 @@ extension_services:
           remark: HTTPwithcustompersistence
           schemaVersion: 3.0.0
         persist: true
-post_onboard_enabled: []
+post_onboard_enabled:
+  - name: create_metadata_route
+    type: inline
+    commands:
+    - tmsh create sys management-route azureMetadata network 169.254.169.254/32 gateway
+      10.0.0.1
+    - tmsh save sys config
 pre_onboard_enabled:
   - name: provision_rest
     type: inline
@@ -114,7 +131,7 @@ pre_onboard_enabled:
   - name: provision_modules
     type: inline
     commands:
-      - echo 'sys provision asm { level nominal }' >> bigip_base.conf
+      - echo 'sys provision asm { level nominal }' >> /config/bigip_base.conf
 runtime_parameters:
   - name: HOST_NAME
     type: metadata
@@ -122,13 +139,6 @@ runtime_parameters:
       environment: azure
       type: compute
       field: name
-  - name: BIGIP_PASSWORD
-    type: secret
-    secretProvider:
-      type: KeyVault
-      environment: azure
-      vaultUrl: https://myVaultName.vault.azure.net
-      secretId: myBigipSecret
   - name: SELF_IP_EXTERNAL
     type: metadata
     metadataProvider:

@@ -17,7 +17,7 @@
 				"owner": "OWNER"
 			}
 		},
-		"virtualNetworkName": {
+		"vnetName": {
 			"value": "virtualNetwork"
 		},
 		"vnetAddressPrefix": {

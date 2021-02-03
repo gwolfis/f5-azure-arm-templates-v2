@@ -45,12 +45,12 @@ This template deploys a simple example application. It launches a linux VM used 
 | appPrivateAddress | Yes | Desire private IP; must be within private subnet. |
 | adminUsername | Yes | User name for the Virtual Machine. |
 | adminPassword | Yes | Password for the Virtual Machine. |
-| dnsLabel | Yes | Unique DNS Name for the Public IP address used to access the Virtual Machine. |
+| dnsLabel | Yes | Unique DNS name for the public IP address used to access the virtual machine. |
 | instanceName | Yes | Name of the Virtual Machine. |
-| instanceType | Yes | Instance size of the Virtual Machine. |
+| instanceType | Yes | Enter valid instance type. |
 | initScriptDeliveryLocation | No | URI to bash init script. |
 | initScriptParameters | No | Parameters used for init script; multiple parameters must be provided as a space-separated string. |
-| cloudInitDeliveryLocation | No | URI to cloud-init config. |
+| cloudInitUrl | No | URI to cloud-init config. |
 
 ### Template Outputs
 

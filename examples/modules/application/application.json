@@ -4,20 +4,20 @@
 	"parameters": {
 		"adminUsername": {
 			"metadata": {
-				"description": "Admin username used for accessing VM"
+				"description": "Admin username applied to BIG-IP Virtual Machine."
 			},
 			"type": "string"
 		},
 		"sshKey": {
 			"metadata": {
-				"description": "Supply ssh public key you wish to use to connect to the virtual machine."
+				"description": "Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
 			},
 			"type": "string"
 		},
 		"instanceName": {
 			"defaultValue": "vm01",
 			"metadata": {
-				"description": "VM instance name"
+				"description": "VM instance name."
 			},
 			"type": "string"
 		},
@@ -27,34 +27,34 @@
 			],
 			"defaultValue": "Standard_D2s_v3",
 			"metadata": {
-				"description": "Instance size of the Virtual Machine."
+				"description": "Enter valid instance type."
 			},
 			"type": "string"
 		},
 		"subnetId": {
 			"metadata": {
-				"description": "Existing subnet resource ID which will be used for getting vm/app private address"
+				"description": "Enter the subnet ID to use."
 			},
 			"type": "string"
 		},
 		"nsgId": {
 			"defaultValue": "",
 			"metadata": {
-				"description": "Existing subnet NSG ID which will be applied to app VM network interface."
+				"description": "Enter security group id to use. Use default if you do not wish to apply an NSG policy."
 			},
 			"type": "string"
 		},
-		"appContainer": {
-			"defaultValue": "f5devcentral/f5-demo-app:1.0.1",
+		"appContainerName": {
+			"defaultValue": "f5devcentral/f5-demo-app:latest",
 			"metadata": {
-				"description": "Docker container to use when deploying the example application."
+				"description": "The docker container to use when deploying the example application."
 			},
 			"type": "string"
 		},
-		"cloudInitDeliveryLocation": {
+		"cloudInitUrl": {
 			"defaultValue": "",
 			"metadata": {
-				"description": "URI to cloud init file used for customizing VM"
+				"description": "URl to cloud-init file used for customizing VM."
 			},
 			"type": "string"
 		},
@@ -74,7 +74,7 @@
 	},
 	"variables": {
 		"apiVersion": "2015-06-15",
-		"cloudInit": "[concat('#include\n',parameters('cloudInitDeliveryLocation'))]",
+		"cloudInit": "[concat('#include\n',parameters('cloudInitUrl'))]",
 		"nicName": "[concat(variables('vmName'), '-nic')]",
 		"networkSecurityGroup": {
 			"id": "[parameters('nsgId')]"
@@ -175,7 +175,7 @@
 		},
 		{
 			"apiVersion": "[variables('apiVersion')]",
-			"condition": "[not(empty(parameters('appContainer')))]",
+			"condition": "[not(empty(parameters('appContainerName')))]",
 			"dependsOn": [
 				"[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
 			],
@@ -184,7 +184,7 @@
 			"properties": {
 				"publisher": "Microsoft.Azure.Extensions",
 				"settings": {
-					"commandToExecute": "[concat('apt-get update -y; apt-get -y install docker.io; docker run --name f5demo -p 80:80 -p 443:443 -d ', parameters('appContainer'), '')]"
+					"commandToExecute": "[concat('sleep 60; apt-get update -y; apt-get -y install docker.io; docker run --name f5demo -p 80:80 -p 443:443 -d ', parameters('appContainerName'), '')]"
 				},
 				"type": "CustomScript",
 				"typeHandlerVersion": "2.0"

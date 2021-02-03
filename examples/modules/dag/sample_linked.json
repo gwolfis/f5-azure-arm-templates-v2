@@ -3,16 +3,16 @@
 	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"artifactLocation": {
-			"defaultValue": "f5-azure-arm-templates-v2/examples/",
+			"defaultValue": "[concat('f5-azure-arm-templates-v2/v', deployment().properties.template.contentVersion, '/examples/')]",
 			"metadata": {
-				"description": "Location where modules folder is stored."
+				"description": "The directory, relative to the templateBaseUrl, where the modules folder is located."
 			},
 			"type": "string"
 		},
 		"templateBaseUrl": {
 			"defaultValue": "https://cdn.f5.com/product/cloudsolutions/",
 			"metadata": {
-				"description": "URL where templates are stored."
+				"description": "The publicly accessible URL where the linked ARM templates are located."
 			},
 			"type": "string"
 		}
@@ -80,10 +80,10 @@
 							}
 						]
 					},
-					"numberPublicExternalIPAddresses": {
+					"numberPublicExternalIpAddresses": {
 						"value": 1
 					},
-					"numberPublicMgmtIPAddresses": {
+					"numberPublicMgmtIpAddresses": {
 						"value": 0
 					},
 					"tagValues": {
@@ -112,6 +112,10 @@
 		"externalIps": {
 			"type": "array",
 			"value": "[reference('dagTemplate').outputs.externalIps.value]"
+		},
+		"externalIpDns": {
+			"type": "array",
+			"value": "[reference('dagTemplate').outputs.externalIpDns.value]"
 		},
 		"externalBackEndLoadBalancerID": {
 			"type": "string",

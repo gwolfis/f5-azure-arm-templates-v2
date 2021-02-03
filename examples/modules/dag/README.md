@@ -33,9 +33,9 @@ This template creates various cloud resources to get traffic to BIG-IP solutions
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| numberPublicMgmtIPAddresses | Yes | Valid values include any integer between 1-10. Enter the number of public mgmt IP addresses to create. |
-| numberPublicExternalIPAddresses | Yes | Valid values include any integer between 1-10. Enter the number of public external IP addresses to create. At least one is required to build ELB. |
-| dnsLabel | Yes | Unique DNS Name for the Public IP address used to access the Virtual Machine. |
+| numberPublicMgmtIpAddresses | Yes | Valid values include any integer between 1-10. Enter the number of public mgmt IP addresses to create. |
+| numberPublicExternalIpAddresses | Yes | Valid values include any integer between 1-10. Enter the number of public external IP addresses to create. At least one is required to build ELB. |
+| dnsLabel | Yes | Unique DNS name for the public IP address used to access the virtual machine. |
 | externalLoadBalancerName | Yes | Valid values include 'None', or an external load balancer name. A value of 'None' will not create an external load balancer. Specifying a name creates an external load balancer with the name specified. |
 | loadBalancerRulePorts | Yes | Valid values include valid TCP ports. Enter an array of ports that your applications use. For example: '[80,443,445]' |
 | internalLoadBalancerName | Yes | Valid values include 'None', or an internal load balancer name. A value of 'None' will not create an internal load balancer. Specifying a name creates an internal load balancer with the name specified. |
@@ -52,6 +52,7 @@ This template creates various cloud resources to get traffic to BIG-IP solutions
 | --- | --- | --- | --- |
 | externalIpIds | External Public IP Address resource IDs | External Public IP Address | array |
 | externalIps | External Public IP Addresses | External Public IP Address | array |
+| externalIpDns | External Public IP Addresses DNS | External Public IP Address | array |
 | externalBackEndLoadBalancerID | Application Back End Address Pool resource ID | External Load Balancer | string |
 | externalBackEndMgmtLoadBalancerID | Management Back End Address Pool resource ID | External Load Balancer | string |
 | externalFrontEndLoadBalancerID | Application Front End resource IDs | External Load Balancer | array |

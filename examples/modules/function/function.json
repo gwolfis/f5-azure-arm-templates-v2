@@ -12,49 +12,49 @@
 		"bigIqAddress": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The IP address (or hostname) for the BIG-IQ to be used when licensing the BIG-IP.  Note: The BIG-IP will make a REST call to the BIG-IQ (already existing) to let it know a BIG-IP needs to be licensed. It will then license the BIG-IP using the provided BIG-IQ credentials and license pool."
+				"description": "The IP address (or hostname) for the BIG-IQ used when licensing the BIG-IP.  Note: The Azure function created by this template will make a REST call to the BIG-IQ (already existing) to revoke a license assignment when a BIG-IP instance is deallocated. This value should match the BIG-IQ address specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqLicensePoolName": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ license pool to use during BIG-IP licensing via BIG-IQ."
+				"description": "The BIG-IQ license pool to use during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ license pool specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqPassword": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ password to use during BIG-IP licensing via BIG-IQ."
+				"description": "The BIG-IQ password to use during BIG-IP licensing via BIG-IQ; it will be stored as a secret in the Azure function KeyVault created by this template. This value should match the BIG-IQ password specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "securestring"
 		},
 		"bigIqUsername": {
 			"defaultValue": "azureuser",
 			"metadata": {
-				"description": "The BIG-IQ username to use during BIG-IP licensing via BIG-IQ."
+				"description": "The BIG-IQ username used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ username specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqTenant": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ tenant used during BIG-IP licensing via BIG-IQ."
+				"description": "The BIG-IQ tenant used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ tenant specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqUtilityKey": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ utility license key used during BIG-IP licensing via BIG-IQ."
+				"description": "The BIG-IQ utility license key used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ utility key specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqUtilityOffer": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ utility offer ID used during BIG-IP licensing via BIG-IQ."
+				"description": "The BIG-IQ utility offer ID used during BIG-IP licensing via BIG-IQ. This value should match offer id that corresponds to the SKU specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},

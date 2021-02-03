@@ -16,7 +16,7 @@
                 "description": "Indicate the number of subnets to create."
             }
         },
-        "virtualNetworkName": {
+        "vnetName": {
             "defaultValue": "virtualNetwork",
             "type": "String",
             "metadata": {
@@ -38,7 +38,7 @@
                 "group": "GROUP",
                 "owner": "OWNER"
             },
-            "type": "Object",
+            "type": "object",
             "metadata": {
                 "description": "Default key/value resource tags will be added to the resources in this deployment, if you would like the values to be unique adjust them as needed for each key."
             }
@@ -62,8 +62,8 @@
             }
         ],       
         "networkApiVersion": "2020-06-01",
-        "natGatewayName": "[concat(parameters('virtualNetworkName'), '-natgw')]",
-        "natGatewayPublicIpName": "[concat(parameters('virtualNetworkName'), '-natgw-pip')]"
+        "natGatewayName": "[concat(parameters('vnetName'), '-natgw')]",
+        "natGatewayPublicIpName": "[concat(parameters('vnetName'), '-natgw-pip')]"
     },
     "resources": [
         {
@@ -121,7 +121,7 @@
                 "routeTableLoop",
                 "[resourceId('Microsoft.Network/natGateways', variables('natGatewayName'))]"
             ],
-            "name": "[parameters('virtualNetworkName')]",
+            "name": "[parameters('vnetName')]",
             "location": "[resourceGroup().location]",
             "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
             "properties": {
@@ -151,13 +151,13 @@
             "condition": "[greaterOrEquals(parameters('numSubnets'), 1)]",
             "copy": {
                 "count": "[parameters('numSubnets')]",
-                "input": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), concat('subnet', copyIndex()))]"
+                "input": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), concat('subnet', copyIndex()))]"
             },
             "type": "Array"
         },
         "virtualNetwork": {
             "type": "String",
-            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
         }
     }
 }

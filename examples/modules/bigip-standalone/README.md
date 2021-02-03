@@ -59,7 +59,7 @@ This ARM template creates a BIG-IP Virtual Machine (VM) and optionally associate
 | instanceType | Yes | Enter a valid instance type. |
 | loadBalancerBackendAddressPoolsArray | No | Enter an array of pools where BIG-IP instance is to be added. |
 | roleDefinitionId | No | Enter a role definition ID you want to add to system managed identity. Leave default if system managed identity is not used. |
-| runtimeConfig | Yes | Url to bigip-runtime-init configuration file or json string to use for configuration file. |
+| bigIpRuntimeInitConfig | Yes | Url to bigip-runtime-init configuration file or json string to use for configuration file. |
 | sshKey | Yes | Supply the SSH public key you want to use to connect to the BIG-IP. |
 | tagValues | No | Default key/value resource tags will be added to the resources in this deployment, if you would like the values to be unique, adjust them as needed for each key. |
 | useAvailabilityZones | Yes | This deployment can deploy resources into Azure Availability Zones (if the region supports it). If that is not desired, the input should be set 'No'. If the region does not support availability zones, the input should be set to 'No'. |

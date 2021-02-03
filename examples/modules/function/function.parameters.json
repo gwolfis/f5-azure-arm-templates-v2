@@ -12,7 +12,7 @@
 			"value": "Default"
 		},
 		"bigIqUsername": {
-			"value": "Default"
+			"value": "azureuser"
 		},
 		"bigIqTenant": {
 			"value": "Default"

@@ -11,7 +11,7 @@
 		"appPrivateAddress": {
 			"value": "10.0.0.2"
 		},
-		"cloudInitDeliveryLocation": {
+		"cloudInitUrl": {
 			"value": ""
 		},
 		"dnsLabel": {
@@ -42,7 +42,7 @@
 			}
 		},
 		"vnetName": {
-			"value": "test-vnet"
+			"value": "virtualNetwork"
 		},
 		"vnetResourceGroupName": {
 			"value": "test-resource-group"

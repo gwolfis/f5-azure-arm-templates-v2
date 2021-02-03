@@ -3,7 +3,7 @@
 	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"adminUsername": {
-			"value": "azureuser"
+			"value": "my-admin"
 		},
 		"appInsights": {
 			"value": ""
@@ -18,36 +18,36 @@
 			"value": []
 		},
 		"dnsLabel": {
-			"value": "appDns"
+			"value": "test.dns.value"
 		},
 		"image": {
 			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
 		},
-		"inboundMgmtNatPoolID": {
+		"inboundMgmtNatPoolId": {
 			"value": ""
 		},
-		"inboundSshNatPoolID": {
+		"inboundSshNatPoolId": {
 			"value": ""
 		},
-		"instanceHealthProbeID": {
+		"instanceHealthProbeId": {
 			"value": ""
 		},
 		"instanceType": {
-			"value": "Standard_DS2_v2"
+			"value": "Standard_D2s_v3"
 		},
 		"loadBalancerBackendAddressPoolsArray": {
 			"value": []
 		},
-		"nsgID": {
+		"nsgId": {
 			"value": ""
 		},
-		"provisionPublicIP": {
+		"provisionPublicIp": {
 			"value": {}
 		},
 		"roleDefinitionId": {
 			"value": ""
 		},
-		"runtimeConfig": {
+		"bigIpRuntimeInitConfig": {
 			"value": ""
 		},
 		"scaleInCpuThreshold": {

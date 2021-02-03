@@ -3,16 +3,16 @@
 	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"artifactLocation": {
-			"defaultValue": "f5-azure-arm-templates-v2/examples/",
+			"defaultValue": "[concat('f5-azure-arm-templates-v2/v', deployment().properties.template.contentVersion, '/examples/')]",
 			"metadata": {
-				"description": "Location where modules folder is stored."
+				"description": "The directory, relative to the templateBaseUrl, where the modules folder is located."
 			},
 			"type": "string"
 		},
 		"templateBaseUrl": {
 			"defaultValue": "https://cdn.f5.com/product/cloudsolutions/",
 			"metadata": {
-				"description": "URL where templates are stored."
+				"description": "The publicly accessible URL where the linked ARM templates are located."
 			},
 			"type": "string"
 		}
@@ -48,13 +48,13 @@
 					"image": {
 						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
 					},
-					"inboundMgmtNatPoolID": {
+					"inboundMgmtNatPoolId": {
 						"value": ""
 					},
-					"inboundSshNatPoolID": {
+					"inboundSshNatPoolId": {
 						"value": ""
 					},
-					"instanceHealthProbeID": {
+					"instanceHealthProbeId": {
 						"value": ""
 					},
 					"instanceType": {
@@ -63,16 +63,16 @@
 					"loadBalancerBackendAddressPoolsArray": {
 						"value": []
 					},
-					"nsgID": {
+					"nsgId": {
 						"value": ""
 					},
-					"provisionPublicIP": {
+					"provisionPublicIp": {
 						"value": {}
 					},
 					"roleDefinitionId": {
 						"value": ""
 					},
-					"runtimeConfig": {
+					"bigIpRuntimeInitConfig": {
 						"value": ""
 					},
 					"scaleInCpuThreshold": {
