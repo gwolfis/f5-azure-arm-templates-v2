@@ -31,13 +31,10 @@ extension_services:
             class: Provision
             ltm: nominal
             asm: nominal
-          quickstart:
+          admin:
             class: User
             userType: regular
-            partitionAccess:
-              all-partitions:
-                role: admin
-            password: '{{{ HOST_NAME }}}'
+            password: '{{{ BIGIP_PASSWORD }}}'
             shell: bash
     - extensionType: as3
       type: inline
@@ -87,7 +84,7 @@ pre_onboard_enabled:
   - name: provision_modules
     type: inline
     commands:
-      - echo 'sys provision asm { level nominal }' >> /config/bigip_base.conf
+      - echo 'sys provision asm { level nominal }' >> bigip_base.conf
 runtime_parameters:
   - name: HOST_NAME
     type: metadata
@@ -95,3 +92,10 @@ runtime_parameters:
       environment: azure
       type: compute
       field: name
+  - name: BIGIP_PASSWORD
+    type: secret
+    secretProvider:
+      type: KeyVault
+      environment: azure
+      vaultUrl: https://myVaultName.vault.azure.net
+      secretId: myBigipSecret

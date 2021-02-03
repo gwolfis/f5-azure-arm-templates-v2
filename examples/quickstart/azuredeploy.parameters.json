@@ -9,7 +9,7 @@
 			"value": "f5-azure-arm-templates-v2/v1.2.0.0/examples/"
 		},
 		"uniqueString": {
-			"value": "myUniqueString"
+			"value": ""
 		},
 		"sshKey": {
             "value": ""
@@ -18,10 +18,10 @@
             "value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly-f5:15.1.200000"
         },
         "instanceType": {
-            "value": "Standard_DS4_v2"
+            "value": "Standard_D2s_v3"
         },
 		"appContainerName": {
-			"value": "f5devcentral/f5-demo-app:1.0.1"
+			"value": "f5devcentral/f5-demo-app:latest"
 		},
 		"numNics": {
 			"value": 3
@@ -29,7 +29,7 @@
 		"usePublicMgmtAddress": {
 			"value": true
 		},
-		"numberPublicExternalIPAddresses": {
+		"numberPublicExternalIpAddresses": {
 			"value": 3
 		},
 		"bigIpRuntimeInitConfig": {

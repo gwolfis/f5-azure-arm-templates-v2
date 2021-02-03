@@ -528,14 +528,6 @@
 			},
 			"type": "array"
 		},
-		"externalIpDns": {
-			"condition": "[greater(parameters('numberPublicExternalIPAddresses'), 0)]",
-			"copy": {
-				"count": "[parameters('numberPublicExternalIPAddresses')]",
-				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-app-pip', copyIndex()))).dnsSettings.fqdn]"
-			},
-			"type": "array"
-		},
 		"externalBackEndLoadBalancerID": {
 			"condition": "[not(equals(toLower(parameters('externalLoadBalancerName')), string('none')))]",
 			"type": "string",

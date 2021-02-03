@@ -52,7 +52,6 @@ This template creates various cloud resources to get traffic to BIG-IP solutions
 | --- | --- | --- | --- |
 | externalIpIds | External Public IP Address resource IDs | External Public IP Address | array |
 | externalIps | External Public IP Addresses | External Public IP Address | array |
-| externalIpDns | External Public IP Addresses DNS | External Public IP Address | array |
 | externalBackEndLoadBalancerID | Application Back End Address Pool resource ID | External Load Balancer | string |
 | externalBackEndMgmtLoadBalancerID | Management Back End Address Pool resource ID | External Load Balancer | string |
 | externalFrontEndLoadBalancerID | Application Front End resource IDs | External Load Balancer | array |

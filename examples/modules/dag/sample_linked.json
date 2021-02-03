@@ -113,10 +113,6 @@
 			"type": "array",
 			"value": "[reference('dagTemplate').outputs.externalIps.value]"
 		},
-		"externalIpDns": {
-			"type": "array",
-			"value": "[reference('dagTemplate').outputs.externalIpDns.value]"
-		},
 		"externalBackEndLoadBalancerID": {
 			"type": "string",
 			"value": "[reference('dagTemplate').outputs.externalBackEndLoadBalancerID.value]"

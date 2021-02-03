@@ -43,7 +43,7 @@
 			"type": "string"
 		},
 		"appContainerName": {
-			"defaultValue": "f5devcentral/f5-demo-app:1.0.1",
+			"defaultValue": "f5devcentral/f5-demo-app:latest",
 			"metadata": {
 				"description": "The docker container to use when deploying the example application."
 			},
@@ -68,7 +68,7 @@
 			},
 			"type": "bool"
 		},
-		"numberPublicExternalIPAddresses": {
+		"numberPublicExternalIpAddresses": {
 			"allowedValues": [
 				1,
 				2,
@@ -122,7 +122,7 @@
 		"adminUsername": "azureuser",
 
 		"numSubnets": "[if(variables('provisionApp'), add(parameters('numNics'), 1), parameters('numNics'))]",
-		"virtualNetworkName": "[concat(variables('uniqueString'), '-vnet')]",
+		"vnetName": "[concat(variables('uniqueString'), '-vnet')]",
 		"vnetAddressPrefix": "10.0",
 
 		"externalLoadBalancerName": "None",
@@ -140,7 +140,7 @@
 		"provisionApp": "[not(empty(parameters('appContainerName')))]",
 		"appInstanceName": "appvm01",
 		"appInstanceType": "Standard_D2s_v3",
-		"cloudInitDeliveryLocation": "",
+		"cloudInitUrl": "",
 
 		"mgmtSelfIp": "10.0.0.4",
 		"nic1SelfIp": "10.0.1.4",
@@ -166,7 +166,7 @@
 				},
 				"parameters": {
 					"numSubnets":{ "value": "[variables('numSubnets')]" },
-					"virtualNetworkName":{ "value": "[variables('virtualNetworkName')]" },
+					"vnetName":{ "value": "[variables('vnetName')]" },
 					"vnetAddressPrefix":{ "value": "[variables('vnetAddressPrefix')]" },
 					"createNatGateway":{ "value": "[if(parameters('usePublicMgmtAddress'), false(), true())]" },					
 					"tagValues":{ "value": "[parameters('tagValues')]" }
@@ -196,8 +196,8 @@
 					"nsg0":{ "value": "[variables('nsg0')]" },
 					"nsg1":{ "value": "[variables('nsg1')]" },
 					"nsg2":{ "value": "[variables('nsg2')]" },
-					"numberPublicExternalIPAddresses":{ "value": "[parameters('numberPublicExternalIPAddresses')]" },
-					"numberPublicMgmtIPAddresses":{ "value": "[if(parameters('usePublicMgmtAddress'), 1, 0)]" },
+					"numberPublicExternalIpAddresses":{ "value": "[parameters('numberPublicExternalIpAddresses')]" },
+					"numberPublicMgmtIpAddresses":{ "value": "[if(parameters('usePublicMgmtAddress'), 1, 0)]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" }
 				}
 			}
@@ -224,8 +224,8 @@
 					"instanceType":{ "value": "[variables('appInstanceType')]" },
 					"subnetId":{ "value": "[last(reference('networkTemplate').outputs.subnets.value)]" },
 					"nsgId":{ "value": "[if(equals(parameters('numNics'), 1), reference('dagTemplate').outputs.nsg0Id.value, reference('dagTemplate').outputs.nsg1Id.value)]" },	
-					"appContainer":{ "value": "[parameters('appContainerName')]" },
-					"cloudInitDeliveryLocation":{ "value": "[variables('cloudInitDeliveryLocation')]" },
+					"appContainerName":{ "value": "[parameters('appContainerName')]" },
+					"cloudInitUrl":{ "value": "[variables('cloudInitUrl')]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" }
 				}
 			}
@@ -255,16 +255,16 @@
 					"mgmtSelfIp":{ "value": "[variables('mgmtSelfIp')]" },
 					"nic1SubnetId":{ "value": "[if(greaterOrEquals(parameters('numNics'), 2), reference('networkTemplate').outputs.subnets.value[1], '')]" },
 					"nic1NsgId":{ "value": "[if(greaterOrEquals(parameters('numNics'), 2), reference('dagTemplate').outputs.nsg1Id.value, '')]" },
-					"nic1PrimaryPublicId":{ "value": "[if(greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 1), reference('dagTemplate').outputs.externalIpIds.value[0], '')]" },
+					"nic1PrimaryPublicId":{ "value": "[if(greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 1), reference('dagTemplate').outputs.externalIpIds.value[0], '')]" },
 					"nic1SelfIp":{ "value": "[variables('nic1SelfIp')]" },
-					"nic1ServiceIPs":{ "value": [{"publicIpId":"[if(greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 2), reference('dagTemplate').outputs.externalIpIds.value[1], '')]","privateIpAddress":"[variables('nic1ServiceIP1')]"},{"publicIpId":"[if(greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 3), reference('dagTemplate').outputs.externalIpIds.value[2], '')]","privateIpAddress":"[variables('nic1ServiceIP2')]"},{"publicIpId":"[if(greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 4), reference('dagTemplate').outputs.externalIpIds.value[3], '')]","privateIpAddress":"[variables('nic1ServiceIP3')]"}] },
+					"nic1ServiceIPs":{ "value": [{"publicIpId":"[if(greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 2), reference('dagTemplate').outputs.externalIpIds.value[1], '')]","privateIpAddress":"[variables('nic1ServiceIP1')]"},{"publicIpId":"[if(greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 3), reference('dagTemplate').outputs.externalIpIds.value[2], '')]","privateIpAddress":"[variables('nic1ServiceIP2')]"},{"publicIpId":"[if(greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 4), reference('dagTemplate').outputs.externalIpIds.value[3], '')]","privateIpAddress":"[variables('nic1ServiceIP3')]"}] },
 					"nic2SubnetId":{ "value": "[if(greaterOrEquals(parameters('numNics'), 3), reference('networkTemplate').outputs.subnets.value[2], '')]" },
 					"nic2NsgId":{ "value": "[if(greaterOrEquals(parameters('numNics'), 3), reference('dagTemplate').outputs.nsg2Id.value, '')]" },
 					"nic2PrimaryPublicId":{ "value": "" },					
 					"nic2SelfIp":{ "value": "[variables('nic2SelfIp')]" },
 					"nic2ServiceIPs":{ "value": [{"privateIpAddress":"[variables('nic2ServiceIP1')]"}] },
 					"roleDefinitionId":{ "value": "" },
-					"runtimeConfig":{ "value": "[parameters('bigIpRuntimeInitConfig')]" },
+					"bigIpRuntimeInitConfig":{ "value": "[parameters('bigIpRuntimeInitConfig')]" },
 					"sshKey":{ "value": "[parameters('sshKey')]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" },
 					"uniqueString":{ "value": "[variables('uniqueString')]" },
@@ -318,12 +318,12 @@
             "value": "[variables('nic1ServiceIP1')]"
         },
 		"vip1PublicIp": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 2)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 2)]",
             "type": "string",
             "value": "[reference('dagTemplate').outputs.externalIps.value[1]]"
         },
 		"vip1PublicIPDns": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 2)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 2)]",
             "type": "string",
             "value": "[reference('dagTemplate').outputs.externalIpDns.value[1]]"
         },
@@ -332,7 +332,7 @@
             "value": "[concat('http://', variables('nic1ServiceIP1'), '/')]"
         },
 		"vip1PublicUrlHttp": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 2)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 2)]",
             "type": "string",
             "value": "[concat('http://', reference('dagTemplate').outputs.externalIps.value[1], '/')]"
         },
@@ -341,7 +341,7 @@
             "value": "[concat('https://', variables('nic1ServiceIP1'), '/')]"
         },
 		"vip1PublicUrlHttps": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 2)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 2)]",
             "type": "string",
             "value": "[concat('https://', reference('dagTemplate').outputs.externalIps.value[1], '/')]"
         },
@@ -350,12 +350,12 @@
             "value": "[variables('nic1ServiceIP2')]"
         },
 		"vip2PublicIp": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 3)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 3)]",
             "type": "string",
             "value": "[reference('dagTemplate').outputs.externalIps.value[2]]"
         },
 		"vip2PublicIPDns": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 3)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 3)]",
             "type": "string",
             "value": "[reference('dagTemplate').outputs.externalIpDns.value[2]]"
         },
@@ -364,7 +364,7 @@
             "value": "[concat('http://', variables('nic1ServiceIP2'), '/')]"
         },
 		"vip2PublicUrlHttp": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 3)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 3)]",
             "type": "string",
             "value": "[concat('http://', reference('dagTemplate').outputs.externalIps.value[2], '/')]"
         },
@@ -373,7 +373,7 @@
             "value": "[concat('https://', variables('nic1ServiceIP2'), '/')]"
         },
 		"vip2PublicUrlHttps": {
-			"condition": "[greaterOrEquals(parameters('numberPublicExternalIPAddresses'), 3)]",
+			"condition": "[greaterOrEquals(parameters('numberPublicExternalIpAddresses'), 3)]",
             "type": "string",
             "value": "[concat('https://', reference('dagTemplate').outputs.externalIps.value[2], '/')]"
         },
