@@ -145,11 +145,11 @@ runtime_parameters:
       environment: azure
       type: network
       field: ipv4
-      index: 2
+      index: 1
   - name: SELF_IP_INTERNAL
     type: metadata
     metadataProvider:
       environment: azure
       type: network
       field: ipv4
-      index: 1
+      index: 2
