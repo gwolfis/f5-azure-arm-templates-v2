@@ -25,8 +25,8 @@ extension_services:
             restjavad.useextramb: true
             provision.extramb: 1000
             ui.advisory.enabled: true
-            ui.advisory.color: green
-            ui.advisory.text: "BIG-IP Quickstart"
+            ui.advisory.color: blue
+            ui.advisory.text: "BIG-IP VE Quickstart"
           default:
             class: Route
             gw: 10.0.1.1
