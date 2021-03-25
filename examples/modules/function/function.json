@@ -17,7 +17,6 @@
 			"type": "string"
 		},
 		"bigIqLicensePoolName": {
-			"defaultValue": "Default",
 			"metadata": {
 				"description": "The BIG-IQ license pool to use during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ license pool specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
@@ -44,17 +43,10 @@
 			},
 			"type": "string"
 		},
-		"bigIqUtilityKey": {
+		"bigIqUtilitySku": {
 			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ utility license key used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ utility key specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
-			},
-			"type": "string"
-		},
-		"bigIqUtilityOffer": {
-			"defaultValue": "Default",
-			"metadata": {
-				"description": "The BIG-IQ utility offer ID used during BIG-IP licensing via BIG-IQ. This value should match offer id that corresponds to the SKU specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
+				"description": "The BIG-IQ utility license SKU used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ utility SKU specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
@@ -103,7 +95,7 @@
 		"functionAppApiVersion": "2018-11-01",
 		"functionAppName": "[concat(parameters('functionAppName'), '-function')]",
 		"functionAppVnetName": "[last(split(parameters('functionAppVnetId'),'/'))]",
-		"functionUrl": "https://cdn.f5.com/product/cloudsolutions/f5-cloud-functions/azure/TimerTriggerRevoke/v1.1.0/timer_trigger_revoke.zip",
+		"functionUrl": "https://cdn.f5.com/product/cloudsolutions/f5-cloud-functions/azure/TimerTriggerRevoke/develop/v1.2.0/timer_trigger_revoke.zip",
 		"functionStorageAccountId": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('functionStorageAccountName'))]",
 		"functionStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
 		"functionWorkerRuntime": "python",
@@ -182,11 +174,10 @@
 						"AZURE_VMSS_NAME": "[variables('vmssName')]",
 						"AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(variables('functionStorageAccountId'),'2015-05-01-preview').key1)]",
 						"BIGIQ_ADDRESS": "[parameters('bigIqAddress')]",
-						"BIGIQ_LICENSE_POOL": "[if(equals(parameters('bigIqLicensePoolName'), 'Default'), json('null'), parameters('bigIqLicensePoolName'))]",
+						"BIGIQ_LICENSE_POOL": "[parameters('bigIqLicensePoolName')]",
 						"BIGIQ_PASSWORD": "[concat('@Microsoft.KeyVault(SecretUri=https://', variables('keyVaultName'), '.vault.azure.net/secrets/', variables('secretName'), '/)')]",
 						"BIGIQ_USERNAME": "[parameters('bigIqUsername')]",
-						"BIGIQ_UTILITY_KEY": "[if(equals(parameters('bigIqUtilityKey'), 'Default'), json('null'), parameters('bigIqUtilityKey'))]",
-						"BIGIQ_UTILITY_OFFER": "[if(equals(parameters('bigIqUtilityOffer'), 'Default'), json('null'), parameters('bigIqUtilityOffer'))]",
+						"BIGIQ_UTILITY_SKU": "[if(equals(parameters('bigIqUtilitySku'), 'Default'), json('null'), parameters('bigIqUtilitySku'))]",
 						"F5_DISABLE_SSL_WARNINGS": false,
 						"TENANT": "[if(empty(parameters('bigIqTenant')), variables('vmssName'), parameters('bigIqTenant'))]",
 						"FUNCTIONS_EXTENSION_VERSION": "~3",

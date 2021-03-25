@@ -59,19 +59,19 @@
 	],
 	"outputs": {
 		"routeTables": {
-			"type": "array",
+			"type": "Array",
             "value": "[reference('networkTemplate').outputs.routeTables.value]"
         },
 		"natGateway": {
-			"type": "string",
+			"type": "String",
 			"value": "[reference('networkTemplate').outputs.natGateway.value]"
 		},
 		"subnets": {
-			"type": "array",
+			"type": "Array",
             "value": "[reference('networkTemplate').outputs.subnets.value]"
         },
 		"virtualNetwork": {
-			"type": "string",
+			"type": "String",
 			"value": "[reference('networkTemplate').outputs.virtualNetwork.value]"
 		}
 	}

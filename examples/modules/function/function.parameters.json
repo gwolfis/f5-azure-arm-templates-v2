@@ -17,10 +17,7 @@
 		"bigIqTenant": {
 			"value": "Default"
 		},
-		"bigIqUtilityKey": {
-			"value": "Default"
-		},
-		"bigIqUtilityOffer": {
+		"bigIqUtilitySku": {
 			"value": "Default"
 		},
 		"functionAppName": {

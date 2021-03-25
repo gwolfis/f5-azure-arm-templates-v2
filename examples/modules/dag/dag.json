@@ -529,7 +529,7 @@
 			"type": "array"
 		},
 		"externalIpDns": {
-			"condition": "[greater(parameters('numberPublicExternalIPAddresses'), 0)]",
+			"condition": "[greater(parameters('numberPublicExternalIpAddresses'), 0)]",
 			"copy": {
 				"count": "[parameters('numberPublicExternalIPAddresses')]",
 				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-app-pip', copyIndex()))).dnsSettings.fqdn]"
@@ -633,17 +633,17 @@
 		},
 		"nsg0Id": {
             "condition": "[not(empty(parameters('nsg0')))]",
-            "type": "String",
+            "type": "string",
             "value": "[variables('nsg0Id')[0]]"
         },
 		"nsg1Id": {
             "condition": "[not(empty(parameters('nsg1')))]",
-            "type": "String",
+            "type": "string",
             "value": "[variables('nsg1Id')[0]]"
         },
 		"nsg2Id": {
             "condition": "[not(empty(parameters('nsg2')))]",
-            "type": "String",
+            "type": "string",
             "value": "[variables('nsg2Id')[0]]"
         },
 		"nsgIds": {

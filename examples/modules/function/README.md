@@ -14,8 +14,9 @@
     - [Template Input Parameters](#template-input-parameters)
     - [Template Outputs](#template-outputs)
   - [Resource Creation Flow Chart](#resource-creation-flow-chart)
+    - [Contributor License Agreement](#contributor-license-agreement)
   - [Important Configuration Notes](#important-configuration-notes-1)
-  - [Template Parameters](#template-parameters)
+    - [Template Parameters](#template-parameters)
 
 ## Introduction
 
@@ -53,8 +54,7 @@ This template creates the Azure function app, hosting plan, key vault, applicati
 | bigIqPassword | Yes | The BIG-IQ password to use during BIG-IP license revocation via BIG-IQ. This password will be securely stored in an Azure KeyVault secret. |
 | bigIqTenant | No | The BIG-IQ tenant used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ tenant specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter. This limits the scope of licenses eligible for revocation to those that were licensed with the specified tenant value. |
 | bigIqLicensePoolName | No | The BIG-IQ license pool used during BIG-IP licensing via BIG-IQ. |
-| bigIqUtilityKey | No | The BIG-IQ utility license key used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ utility key specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter. ***Important***: This is only required when revoking a license from an ELA/subscription (utility) pool on the BIG-IQ, if not using this pool type leave the default of **Default**. |
-| bigIqUtilityOffer | No | The BIG-IQ utility offer ID (UUID) used during BIG-IP licensing via BIG-IQ. ***Important***: This is only required when revoking a license from an ELA/subscription (utility) pool on the BIG-IQ, if you're not using this pool type, leave the default of **Default**. |
+| bigIqUtilitySku | No | The BIG-IQ utility license SKU used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ utility SKU specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter. ***Important***: This is only required when revoking a license from an ELA/subscription (utility) pool on the BIG-IQ, if not using this pool type leave the default of **Default**. |
 | functionAppName | Yes | Supply a name for the new function app. |
 | functionAppSku | Yes | Supply a configuration for the function app server farm plan SKU (premium or appservice) in JSON format. Information about server farm plans is available [here](https://docs.microsoft.com/en-us/azure/templates/microsoft.web/2018-02-01/serverfarms). |
 | functionAppVnetId | No | The fully-qualified resource ID of the Azure Virtual Network where BIG-IQ is deployed. This is required when connecting to BIG-IQ via a private IP address; the Azure function app will be granted ingress permission to the virtual network. When specifying an Azure public IP address for bigIqAddress, leave the default of **Default**. |

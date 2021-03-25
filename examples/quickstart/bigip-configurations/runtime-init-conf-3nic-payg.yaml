@@ -1,12 +1,48 @@
 ---
+pre_onboard_enabled: []
+runtime_parameters:
+  - name: HOST_NAME
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: compute
+      field: name
+  - name: SELF_IP_EXTERNAL
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: network
+      field: ipv4
+      index: 1
+  - name: SELF_IP_INTERNAL
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: network
+      field: ipv4
+      index: 2
+  - name: BIGIP_PASSWORD
+    type: url
+    value: http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01
+    query: vmId
+    headers:
+      - name: Metadata
+        value: true
+bigip_ready_enabled: []
 extension_packages:
   install_operations:
-    - extensionHash: 536eccb9dbf40aeabd31e64da8c5354b57d893286ddc6c075ecc9273fcca10a1
-      extensionType: do
+    - extensionType: do
+      extensionVersion: 1.19.0
+      extensionHash: 15c1b919954a91b9ad1e469f49b7a0915b20de494b7a032da9eb258bbb7b6c49
+    - extensionType: as3
+      extensionVersion: 3.26.0
+      extensionHash: b33a96c84b77cff60249b7a53b6de29cc1e932d7d94de80cc77fb69e0b9a45a0
+    - extensionType: ts
       extensionVersion: 1.16.0
-    - extensionHash: de615341b91beaed59195dceefc122932580d517600afce1ba8d3770dfe42d28
-      extensionType: as3
-      extensionVersion: 3.23.0
+      extensionHash: b8c14a8b357f4dfcf59185b25a82f322ec98b17823be94cb3bd66f73c5e22781
+    - extensionType: fast
+      extensionVersion: 1.7.0
+      extensionHash: 9c617f5bb1bb0d08ec095ce568a6d5d2ef162e504cd183fe3540586200f9d950
 extension_services:
   service_operations:
     - extensionType: do
@@ -15,9 +51,17 @@ extension_services:
         schemaVersion: 1.0.0
         class: Device
         async: true
-        label: Standalone 3NIC BIG-IP declaration for Declarative Onboarding with PAYG license that uses custom DNS servers
+        label: Standalone 3NIC BIG-IP declaration for Declarative Onboarding with PAYG license
         Common:
           class: Tenant
+          mySystem:
+            autoPhonehome: true
+            class: System
+            hostname: '{{{ HOST_NAME }}}.local'
+          myProvisioning:
+            class: Provision
+            ltm: nominal
+            asm: nominal
           dbVars:
             class: DbVariables
             config.allow.rfc3927: enable
@@ -27,34 +71,38 @@ extension_services:
             ui.advisory.enabled: true
             ui.advisory.color: blue
             ui.advisory.text: "BIG-IP VE Quickstart"
+          azureMetadata:
+            class: ManagementRoute
+            gw: 10.0.0.1
+            network: 169.254.169.254/32
+          dhclient_route1:
+            class: ManagementRoute
+            gw: 10.0.0.1
+            network: 168.63.129.16/32
           default:
+            class: ManagementRoute
+            gw: 10.0.0.1
+            network: default
+          defaultRoute:
             class: Route
             gw: 10.0.1.1
             network: default
           myDns:
             class: DNS
             nameServers:
-              - 8.8.8.8
+              - 168.63.129.16
           myNtp:
             class: NTP
             servers:
               - 0.pool.ntp.org
             timezone: UTC
-          mySystem:
-            autoPhonehome: true
-            class: System
-            hostname: '{{{ HOST_NAME }}}.local'
-          myProvisioning:
-            class: Provision
-            ltm: nominal
-            asm: nominal
           quickstart:
             class: User
             userType: regular
             partitionAccess:
               all-partitions:
                 role: admin
-            password: '{{{ HOST_NAME }}}'
+            password: '{{{ BIGIP_PASSWORD }}}'
             shell: bash
           external:
             class: VLAN
@@ -109,7 +157,7 @@ extension_services:
             serviceMain:
               class: Service_HTTPS
               virtualAddresses:
-              - 0.0.0.0
+              - 10.0.1.101
               snat: auto
               policyWAF:
                 use: WAFPolicy
@@ -118,16 +166,17 @@ extension_services:
                 bigip: "/Common/clientssl"
               redirect80: false
             WAFPolicy:
-              ignoreChanges: true
-              url: https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-no-auto-tune-v1.1.xml
               class: WAF_Policy
+              url: 'https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml'
+              ignoreChanges: false
+              enforcementMode: blocking
           HTTP_Service:
             class: Application
             template: http
             serviceMain:
               class: Service_HTTP
               virtualAddresses:
-              - 0.0.0.0
+              - 10.0.1.101
               snat: auto
               policyWAF:
                 use: WAFPolicy
@@ -135,33 +184,6 @@ extension_services:
             WAFPolicy:
               class: WAF_Policy
               url: 'https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml'
-              ignoreChanges: true
+              ignoreChanges: false
               enforcementMode: blocking
-post_onboard_enabled:
-  - name: create_metadata_route
-    type: inline
-    commands:
-    - tmsh create sys management-route azureMetadata network 169.254.169.254/32 gateway
-      10.0.0.1
-    - tmsh save sys config
-runtime_parameters:
-  - name: HOST_NAME
-    type: metadata
-    metadataProvider:
-      environment: azure
-      type: compute
-      field: name
-  - name: SELF_IP_EXTERNAL
-    type: metadata
-    metadataProvider:
-      environment: azure
-      type: network
-      field: ipv4
-      index: 1
-  - name: SELF_IP_INTERNAL
-    type: metadata
-    metadataProvider:
-      environment: azure
-      type: network
-      field: ipv4
-      index: 2
+post_onboard_enabled: []

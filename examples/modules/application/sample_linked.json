@@ -42,6 +42,9 @@
 					"initScriptParameters": {
 						"value": "Default"
 					},
+					"createAutoscaleGroup": {
+						"value": true
+					},
 					"instanceName": {
 						"value": "Default"
 					},
@@ -73,6 +76,18 @@
 		"appIp": {
 			"type": "string",
 			"value": "[reference('appTemplate').outputs.AppIp.value]"
+		},
+		"vmName": {
+			"type": "string",
+			"value": "[reference('appTemplate').outputs.vmName.value]"
+		},
+		"resourceGroup": {
+			"type": "string",
+			"value": "[reference('appTemplate').outputs.resourceGroup.value]"
+		},
+		"vmssName": {
+			"type": "string",
+			"value": "[reference('appTemplate').outputs.vmssName.value]"
 		}
 	}
 }

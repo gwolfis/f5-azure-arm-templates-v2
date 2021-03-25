@@ -1,30 +1,39 @@
 {
 	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"templateBaseUrl": {
 			"value": "https://cdn.f5.com/product/cloudsolutions/"
 		},
 		"artifactLocation": {
-			"value": "f5-azure-arm-templates-v2/examples/"
+			"value": "f5-azure-arm-templates-v2/v1.2.0.0/examples/"
 		},
 		"uniqueString": {
 			"value": ""
 		},
-		"appContainer": {
-			"value": "f5devcentral/f5-demo-app:1.0.1"
+		"appContainerName": {
+			"value": "f5devcentral/f5-demo-app:latest"
 		},
-		"runtimeConfig": {
-			"value": "https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/autoscale/bigip-configurations/runtime-init-conf-bigiq.yaml"
+		"image": {
+			"value": "f5-networks:f5-big-ip-byol:f5-big-all-2slot-byol:15.1.201000"
 		},
-		"restrictedSrcMgmtAddress": {
+		"bigIpRuntimeInitConfig": {
+			"value": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/runtime-init-conf-bigiq.yaml"
+		},
+		"bigIpScalingMaxSize": {
+			"value": 10
+		},
+		"bigIpScalingMinSize": {
+			"value": 2
+		},
+		"restrictedSrcAddressMgmt": {
 			"value": ""
 		},
 		"useAvailabilityZones": {
 			"value": true
 		},
 		"bigIqAddress": {
-			"value": ""
+			"value": "Default"
 		},
 		"bigIqUsername": {
 			"value": "azureuser"
@@ -35,10 +44,7 @@
 		"bigIqTenant": {
 			"value": "Default"
 		},
-		"bigIqUtilityKey": {
-			"value": "Default"
-		},
-		"bigIqUtilityOffer": {
+		"bigIqUtilitySku": {
 			"value": "Default"
 		},
 		"bigIqVnetId": {

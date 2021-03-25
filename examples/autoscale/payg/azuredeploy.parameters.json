@@ -1,39 +1,36 @@
 {
 	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"templateBaseUrl": {
 			"value": "https://cdn.f5.com/product/cloudsolutions/"
 		},
 		"artifactLocation": {
-			"value": "f5-azure-arm-templates-v2/examples/"
+			"value": "f5-azure-arm-templates-v2/v1.2.0.0/examples/"
 		},
 		"uniqueString": {
 			"value": ""
 		},
-		"appContainer": {
-			"value": "f5devcentral/f5-demo-app:1.0.1"
+		"appContainerName": {
+			"value": "f5devcentral/f5-demo-app:latest"
 		},
-		"bigIpImage": {
-            "value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+		"image": {
+			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000"
 		},
-		"runtimeConfig": {
-			"value": "https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml"
+		"bigIpRuntimeInitConfig": {
+			"value": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml"
 		},
-		"restrictedSrcMgmtAddress": {
+		"bigIpScalingMaxSize": {
+			"value": 10
+		},
+		"bigIpScalingMinSize": {
+			"value": 2
+		},
+		"restrictedSrcAddressMgmt": {
 			"value": ""
 		},
 		"useAvailabilityZones": {
 			"value": true
-		},
-		"bigIpVmScaleSetMinCount": {
-            "value": 2
-		},
-		"bigIpVmScaleSetDefaultCount": {
-            "value": 2
-		},
-		"bigIpVmScaleSetMaxCount": {
-            "value": 100
 		},
 		"tagValues": {
 			"value": {

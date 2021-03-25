@@ -1,6 +1,6 @@
 {
 	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
-	"contentVersion": "1.0.0.0",
+	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"templateBaseUrl": {
 			"defaultValue": "https://cdn.f5.com/product/cloudsolutions/",
@@ -10,7 +10,7 @@
 			"type": "string"
 		},
 		"artifactLocation": {
-			"defaultValue": "[concat('f5-azure-arm-templates/v', deployment().properties.template.contentVersion, '/examples/')]",
+			"defaultValue": "[concat('f5-azure-arm-templates-v2/v', deployment().properties.template.contentVersion, '/examples/')]",
 			"metadata": {
 				"description": "The directory, relative to the templateBaseUrl, where the modules folder is located."
 			},
@@ -32,37 +32,55 @@
 		"newPassword": {
 			"defaultValue": "",
 			"metadata": {
-				"description": "The new password to be used for the admin user on the BIG-IP instances. This is required for creating the AZURE_PASSWORD secret referenced in the runtimeConfig template parameter."
+				"description": "The new password to be used for the admin user on the BIG-IP instances. This is required for creating the AZURE_PASSWORD secret referenced in the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "securestring"
 		},
-		"appContainer": {
-			"defaultValue": "f5devcentral/f5-demo-app:1.0.1",
+		"appContainerName": {
+			"defaultValue": "f5devcentral/f5-demo-app:latest",
 			"metadata": {
 				"description": "The docker container to use when deploying the example application."
 			},
 			"type": "string"
 		},
-		"restrictedSrcMgmtAddress": {
+		"restrictedSrcAddressMgmt": {
 			"defaultValue": "",
 			"metadata": {
 				"description": "When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources."
 			},
 			"type": "string"
 		},
-		"bigIpImage": {
-			"defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000",
+		"image": {
+			"defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000",
 			"metadata": {
-			  "description": "2 formats accepted. URN of the image to use in Azure marketplace or id of custom image. Example URN value: f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.002000. You can find the URNs of F5 marketplace images in the README for this template or by running the command: az vm image list --output yaml --publisher f5-networks --all. See https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html for information on creating custom bigip image."
+				"description": "2 formats accepted. URN of the image to use in Azure marketplace or id of custom image. Example URN value: f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.201000. You can find the URNs of F5 marketplace images in the README for this template or by running the command: az vm image list --output yaml --publisher f5-networks --all. See https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html for information on creating custom BIG-IP image."
 			},
 			"type": "string"
 		},
-		"runtimeConfig": {
-			"defaultValue": "https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml",
+		"bigIpRuntimeInitConfig": {
+			"defaultValue": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/runtime-init-conf-payg.yaml",
 			"metadata": {
 				"description": "Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration."
 			},
 			"type": "string"
+		},
+		"bigIpScalingMaxSize": {
+			"defaultValue": 10,
+			"metadata": {
+				"description": "Maximum number of BIG-IP instances (2-100) that can be created in the Auto Scale Group."
+			},
+			"minValue": 2,
+			"maxValue": 100,
+			"type": "int"
+		},
+		"bigIpScalingMinSize": {
+			"defaultValue": 2,
+			"metadata": {
+				"description": "Minimum number of BIG-IP instances (1-99) you want available in the Auto Scale Group."
+			},
+			"minValue": 1,
+			"maxValue": 99,
+			"type": "int"
 		},
 		"useAvailabilityZones": {
 			"defaultValue": true,
@@ -70,27 +88,6 @@
 				"description": "This deployment can deploy resources into Azure Availability Zones (if the region supports it).  If that is not desired the input should be set 'No'. If the region does not support availability zones the input should be set to No."
 			},
 			"type": "bool"
-		},
-		"bigIpVmScaleSetMinCount": {
-			"defaultValue": 0,
-			"metadata": {
-			  "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
-			},
-			"type": "int"
-		},
-		"bigIpVmScaleSetDefaultCount": {
-			"defaultValue": 2,
-			"metadata": {
-			  "description": "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
-			},
-			"type": "int"
-		},		
-		"bigIpVmScaleSetMaxCount": {
-			"defaultValue": 600,
-			"metadata": {
-			  "description": "The maximum number of BIG-IP VEs that can be deployed into the VM Scale Set."
-			},
-			"type": "int"
 		},
 		"tagValues": {
 			"defaultValue": {
@@ -124,12 +121,9 @@
 		"secretName": "mySecret",
 		"userAssignedIdentityName": "[concat(variables('uniqueString'), '-secretIdentity')]",
 
-		"appNsg": "[variables('uniqueString')]",
-		"mgmtNsg": "[variables('uniqueString')]",
 		"numSubnets": 2,
-		"provisionPublicIPNetwork": true,
 		"restrictedSrcMgmtPort": "8443",
-		"virtualNetworkName": "[concat(variables('uniqueString'), '-vnet')]",
+		"vnetName": "[concat(variables('uniqueString'), '-vnet')]",
 		"vnetAddressPrefix": "10.0",
 
 		"externalLoadBalancerName": "[concat(variables('uniqueString'), '-alb')]",
@@ -137,22 +131,26 @@
 		"internalLoadBalancerProbePort": "3456",
 		"internalSubnetId": "",
 		"loadBalancerRulePorts": ["80","443"],
-		"numberPublicAppIPAddresses": 1,
-		"numberPublicMgmtIPAddresses": 0,
+		"nsg0": [{"destinationPortRanges":["22","8443"],"sourceAddressPrefix":"[parameters('restrictedSrcAddressMgmt')]","protocol":"Tcp"},{"destinationPortRanges":["80","443"],"sourceAddressPrefix":"*","protocol":"Tcp"}],
+		"nsg1": [{"destinationPortRanges":["80","443"],"sourceAddressPrefix":"*","protocol":"Tcp"}],
+		"nsg2": [],
+		"numberPublicExternalIpAddresses": 1,
+		"numberPublicMgmtIpAddresses": 0,
 
-		"provisionApp": "[not(empty(parameters('appContainer')))]",
-		"appInstanceName": "appvm01",
+		"provisionApp": "[not(empty(parameters('appContainerName')))]",
+		"createAutoscaleGroup": true,
+		"appInstanceName": "[variables('uniqueString')]",
 		"appInstanceType": "Standard_D2s_v3",
-		"cloudInitDeliveryLocation": "",
+		"cloudInitUrl": "",
 
 		"appInsights": "[concat(variables('uniqueString'), '-insights')]",
 		"appInsightsId": "[resourceId('Microsoft.Insights/components', variables('appInsights'))]",
 		"cpuMetricName": "Percentage CPU",
 		"customAutoscaleRules": [{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"80","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"20","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"20000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"10000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}}],
 		"customEmail": [],
-		"image": "[parameters('bigIpImage')]",
+		"image": "[parameters('image')]",
 		"instanceType": "Standard_DS3_v2",
-		"provisionPublicIPBigip": { "name": "publicIp01", "properties": { "idleTimeoutInMinutes": 15 } },
+		"provisionPublicIpBigip": { "name": "publicIp01", "properties": { "idleTimeoutInMinutes": 15 } },
 		"roleDefinitionId": "",
 		"scaleInCpuThreshold": 20,
 		"scaleInThroughputThreshold": 10000000,
@@ -161,9 +159,8 @@
 		"scaleOutThroughputThreshold": 20000000,
 		"scaleOutTimeWindow": 10,
 		"throughputMetricName": "Network In",
-		"vmScaleSetMinCount": "[parameters('bigIpVmScaleSetMinCount')]",
-		"vmScaleSetDefaultCount": "[parameters('bigIpVmScaleSetDefaultCount')]",		
-		"vmScaleSetMaxCount": "[parameters('bigIpVmScaleSetMaxCount')]",
+		"vmScaleSetMaxCount": "[parameters('bigIpScalingMaxSize')]",
+		"vmScaleSetMinCount": "[parameters('bigIpScalingMinSize')]",
 		"vmssName": "[concat(variables('uniqueString'), '-vmss')]"
     },
 	"resources": [
@@ -205,13 +202,8 @@
 					"contentVersion": "[variables('contentVersion')]"
 				},
 				"parameters": {
-					"appNsg":{ "value": "[variables('appNsg')]" },
-					"mgmtNsg":{ "value": "[variables('mgmtNsg')]" },
 					"numSubnets":{ "value": "[variables('numSubnets')]" },
-					"provisionPublicIP":{ "value": "[variables('provisionPublicIPNetwork')]" },
-					"restrictedSrcMgmtAddress":{ "value": "[parameters('restrictedSrcMgmtAddress')]" },
-					"restrictedSrcMgmtPort":{ "value": "[variables('restrictedSrcMgmtPort')]" },
-					"virtualNetworkName":{ "value": "[variables('virtualNetworkName')]" },
+					"vnetName":{ "value": "[variables('vnetName')]" },
 					"vnetAddressPrefix":{ "value": "[variables('vnetAddressPrefix')]" },					
 					"tagValues":{ "value": "[parameters('tagValues')]" }
 				}
@@ -237,8 +229,11 @@
 					"internalLoadBalancerProbePort":{ "value": "[variables('internalLoadBalancerProbePort')]" },
 					"internalSubnetId":{ "value": "[variables('internalSubnetId')]" },
 					"loadBalancerRulePorts":{ "value": "[variables('loadBalancerRulePorts')]" },
-					"numberPublicAppIPAddresses":{ "value": "[variables('numberPublicAppIPAddresses')]" },
-					"numberPublicMgmtIPAddresses":{ "value": "[variables('numberPublicMgmtIPAddresses')]" },
+					"nsg0":{ "value": "[variables('nsg0')]" },
+					"nsg1":{ "value": "[variables('nsg1')]" },
+					"nsg2":{ "value": "[variables('nsg2')]" },
+					"numberPublicExternalIpAddresses":{ "value": "[variables('numberPublicExternalIpAddresses')]" },
+					"numberPublicMgmtIpAddresses":{ "value": "[variables('numberPublicMgmtIpAddresses')]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" }
 				}
 			}
@@ -249,7 +244,8 @@
 			"apiVersion": "[variables('deploymentApiVersion')]",
 			"name": "appTemplate",
 			"dependsOn": [
-				"networkTemplate"
+				"networkTemplate",
+				"dagTemplate"
 			],
 			"properties": {
 				"mode": "Incremental",
@@ -260,12 +256,13 @@
 				"parameters": {
 					"adminUsername":{ "value": "[variables('adminUsername')]" },
 					"sshKey":{ "value": "[parameters('sshKey')]" },
+					"createAutoscaleGroup":{ "value": "[variables('createAutoscaleGroup')]" },
 					"instanceName":{ "value": "[variables('appInstanceName')]" },
 					"instanceType":{ "value": "[variables('appInstanceType')]" },
-					"subnetId":{ "value": "[reference('networkTemplate').outputs.appSubnet.value]" },
-					"nsgId":{ "value": "[reference('networkTemplate').outputs.appNSG.value]" },
-					"appContainer":{ "value": "[parameters('appContainer')]" },
-					"cloudInitDeliveryLocation":{ "value": "[variables('cloudInitDeliveryLocation')]" },
+					"subnetId":{ "value": "[reference('networkTemplate').outputs.subnets.value[1]]" },
+					"nsgId":{ "value": "[reference('dagTemplate').outputs.nsg1Id.value]" },
+					"appContainerName":{ "value": "[parameters('appContainerName')]" },
+					"cloudInitUrl":{ "value": "[variables('cloudInitUrl')]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" }
 				}
 			}
@@ -293,15 +290,15 @@
 					"customEmail":{ "value": "[variables('customEmail')]" },
 					"dnsLabel":{ "value": "[variables('uniqueString')]" },
 					"image":{ "value": "[variables('image')]" },
-					"inboundMgmtNatPoolID":{ "value": "[if(greater(variables('numberPublicMgmtIPAddresses'), 0), reference('dagTemplate').outputs.inboundMgmtNatPool.value, '')]" },
-					"inboundSshNatPoolID":{ "value": "[if(greater(variables('numberPublicMgmtIPAddresses'), 0), reference('dagTemplate').outputs.inboundSshNatPool.value, '')]" },
-					"instanceHealthProbeID":{ "value": "[reference('dagTemplate').outputs.externalLoadBalancerProbesID.value[0]]" },
+					"inboundMgmtNatPoolId":{ "value": "[if(greater(variables('numberPublicMgmtIpAddresses'), 0), reference('dagTemplate').outputs.inboundMgmtNatPool.value, '')]" },
+					"inboundSshNatPoolId":{ "value": "[if(greater(variables('numberPublicMgmtIpAddresses'), 0), reference('dagTemplate').outputs.inboundSshNatPool.value, '')]" },
+					"instanceHealthProbeId":{ "value": "[reference('dagTemplate').outputs.externalLoadBalancerProbesID.value[0]]" },
 					"instanceType":{ "value": "[variables('instanceType')]" },
 					"loadBalancerBackendAddressPoolsArray":{ "value": [{ "id": "[reference('dagTemplate').outputs.externalBackEndLoadBalancerID.value]" }] },
-					"nsgID":{ "value": "[reference('networkTemplate').outputs.mgmtNSG.value]" },
-					"provisionPublicIP":{ "value": "[variables('provisionPublicIPBigip')]" },
+					"nsgId":{ "value": "[reference('dagTemplate').outputs.nsg0Id.value]" },
+					"provisionPublicIp":{ "value": "[variables('provisionPublicIpBigip')]" },
 					"roleDefinitionId":{ "value": "[variables('roleDefinitionId')]" },
-					"runtimeConfig":{ "value": "[parameters('runtimeConfig')]" },
+					"bigIpRuntimeInitConfig":{ "value": "[parameters('bigIpRuntimeInitConfig')]" },
 					"scaleInCpuThreshold":{ "value": "[variables('scaleInCpuThreshold')]" },
 					"scaleInThroughputThreshold":{ "value": "[variables('scaleInThroughputThreshold')]" },
 					"scaleInTimeWindow":{ "value": "[variables('scaleInTimeWindow')]" },
@@ -309,14 +306,13 @@
 					"scaleOutThroughputThreshold":{ "value": "[variables('scaleOutThroughputThreshold')]" },
 					"scaleOutTimeWindow":{ "value": "[variables('scaleOutTimeWindow')]" },
 					"sshKey":{ "value": "[parameters('sshKey')]" },
-					"subnetId":{ "value": "[reference('networkTemplate').outputs.mgmtSubnet.value]" },
+					"subnetId":{ "value": "[reference('networkTemplate').outputs.subnets.value[0]]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" },
 					"throughputMetricName":{ "value": "[variables('throughputMetricName')]" },
 					"useAvailabilityZones":{ "value": "[parameters('useAvailabilityZones')]" },
 					"userAssignManagedIdentity":{ "value": "[if(variables('assignManagedIdentity'), reference('accessTemplate').outputs.userAssignedIdentityId.value, '')]" },
-					"vmScaleSetMinCount":{ "value": "[variables('vmScaleSetMinCount')]" },
-					"vmScaleSetDefaultCount":{ "value": "[variables('vmScaleSetDefaultCount')]" },
 					"vmScaleSetMaxCount":{ "value": "[variables('vmScaleSetMaxCount')]" },
+					"vmScaleSetMinCount":{ "value": "[variables('vmScaleSetMinCount')]" },
 					"vmssName":{ "value": "[variables('vmssName')]" }
 				}
 			}
@@ -327,20 +323,15 @@
             "type": "String",
             "value": "[reference('networkTemplate').outputs.virtualNetwork.value]"
         },
-		"appVmName": {
+		"appVmssName": {
 			"condition": "[variables('provisionApp')]",
             "type": "String",
-            "value": "[variables('appInstanceName')]"
+            "value": "[reference('appTemplate').outputs.vmssName.value]"
         },
 		"appPublicIps": {
 			"condition": "[variables('provisionApp')]",
             "type": "array",
-            "value": "[reference('dagTemplate').outputs.appIps.value]"
-        },
-		"appPrivateIp": {
-			"condition": "[variables('provisionApp')]",
-            "type": "String",
-            "value": "[reference('appTemplate').outputs.appIp.value]"
+            "value": "[reference('dagTemplate').outputs.externalIps.value]"
         },
 		"appUsername": {
 			"condition": "[variables('provisionApp')]",

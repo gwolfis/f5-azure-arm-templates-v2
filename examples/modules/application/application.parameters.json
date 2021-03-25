@@ -23,6 +23,9 @@
 		"initScriptParameters": {
 			"value": ""
 		},
+		"createAutoscaleGroup": {
+			"value": true
+		},
 		"instanceName": {
 			"value": "test-instance"
 		},
