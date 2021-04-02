@@ -3,6 +3,7 @@
   "contentVersion": "1.2.0.0",
   "parameters": {
     "adminUsername": {
+      "defaultValue": "azureuser",
       "metadata": {
         "description": "Admin username applied to BIG-IP Virtual Machine."
       },
@@ -10,7 +11,7 @@
     },
     "sshKey": {
       "metadata": {
-        "description": "Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
+        "description": "REQUIRED - Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
       },
       "type": "string"
     },
@@ -40,7 +41,7 @@
     },
     "subnetId": {
       "metadata": {
-        "description": "Enter the subnet ID to use."
+        "description": "REQUIRED - Enter the subnet ID to use."
       },
       "type": "string"
     },
@@ -81,15 +82,15 @@
   },
   "variables": {
     "computeApiVersion": "2019-12-01",
-	"networkApiVersion": "2020-06-01",
-	"storageApiVersion": "2017-10-01",
+    "networkApiVersion": "2020-06-01",
+    "storageApiVersion": "2017-10-01",
     "cloudInit": "[concat('#include\n',parameters('cloudInitUrl'))]",
-	"commandToExecute": "[concat('sleep 60; apt-get update -y; apt-get -y install docker.io; docker run --name f5demo -p 80:80 -p 443:443 -d ', parameters('appContainerName'), '')]",
-	"imageReference": {
+    "commandToExecute": "[concat('sleep 60; apt-get update -y; apt-get -y install docker.io; docker run --name f5demo -p 80:80 -p 443:443 -d ', parameters('appContainerName'), '')]",
+    "imageReference": {
       "offer": "0001-com-ubuntu-server-focal",
-	  "publisher": "Canonical",
-	  "sku": "20_04-lts",
-	  "version": "latest"
+      "publisher": "Canonical",
+      "sku": "20_04-lts",
+      "version": "latest"
     },
     "nicName": "[concat(variables('vmName'), '-nic')]",
     "networkSecurityGroup": {
@@ -100,21 +101,21 @@
     "storageName": "[concat(uniqueString(resourceGroup().name, resourceGroup().id, deployment().name), 'data000')]",
     "subscriptionID": "[subscription().subscriptionId]",
     "vmName": "[concat(parameters('instanceName'), '-app-vm')]",
-	"vmssName": "[concat(parameters('instanceName'), '-app-vmss')]"
+    "vmssName": "[concat(parameters('instanceName'), '-app-vmss')]"
   },
   "resources": [
     {
       "apiVersion": "[variables('storageApiVersion')]",
-	  "kind": "Storage",
+      "kind": "Storage",
       "location": "[resourceGroup().location]",
       "name": "[variables('storageName')]",
       "properties": {
-		  "supportsHttpsTrafficOnly": true
-	  },
-	  "sku": {
-		  "name": "[variables('storageAccountType')]",
-		  "tier": "Standard"
-	  },
+        "supportsHttpsTrafficOnly": true
+      },
+      "sku": {
+        "name": "[variables('storageAccountType')]",
+        "tier": "Standard"
+      },
       "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
       "type": "Microsoft.Storage/storageAccounts"
     },
@@ -150,12 +151,12 @@
       "location": "[resourceGroup().location]",
       "name": "[variables('vmName')]",
       "properties": {
-		"diagnosticsProfile": {
-		  "bootDiagnostics": {
-			"enabled": true,
-			"storageUri": "[concat('https://', variables('storageName'), '.blob.core.windows.net')]"
-		  }
-		},
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('https://', variables('storageName'), '.blob.core.windows.net')]"
+          }
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('instanceType')]"
         },
@@ -185,7 +186,7 @@
         "storageProfile": {
           "imageReference": "[variables('imageReference')]",
           "osDisk": {
-			"createOption": "fromImage",
+            "createOption": "fromImage",
             "caching": "ReadWrite"
           }
         }
@@ -220,8 +221,8 @@
       "location": "[resourceGroup().location]",
       "name": "[variables('vmssName')]",
       "properties": {
-		"overprovision": "false",  
-		"upgradePolicy": {
+        "overprovision": "false",
+        "upgradePolicy": {
           "mode": "Manual"
         },
         "virtualMachineProfile": {
@@ -279,7 +280,7 @@
             }
           },
           "storageProfile": {
-			"imageReference": "[variables('imageReference')]",
+            "imageReference": "[variables('imageReference')]",
             "osDisk": {
               "createOption": "FromImage",
               "caching": "ReadWrite"
@@ -373,17 +374,17 @@
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('nicName')),'2020-06-01').ipConfigurations[0].properties.privateIPAddress]"
     },
-	"vmName": {
+    "vmName": {
       "condition": "[not(parameters('createAutoscaleGroup'))]",
       "type": "string",
       "value": "[variables('vmName')]"
     },
-	"resourceGroupName": {
+    "resourceGroupName": {
       "condition": "[parameters('createAutoscaleGroup')]",
       "type": "string",
       "value": "[resourceGroup().name]"
     },
-	"vmssName": {
+    "vmssName": {
       "condition": "[parameters('createAutoscaleGroup')]",
       "type": "string",
       "value": "[variables('vmssName')]"

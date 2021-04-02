@@ -2,10 +2,9 @@
 	"$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
 	"contentVersion": "1.2.0.0",
 	"parameters": {
-		"dnsLabel": {
-			"defaultValue": "appDns",
+		"uniqueString": {
 			"metadata": {
-				"description": "Unique DNS name for the public IP address used to access the virtual machine."
+				"description": "REQUIRED - A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
 			},
 			"type": "string"
 		},
@@ -154,7 +153,7 @@
 					"name": "[concat('loadBalancerFrontEnd', copyIndex('constructFrontEndIPConfigID'))]",
 					"properties": {
 						"publicIPAddress": {
-							"id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-app-pip', copyIndex('constructFrontEndIPConfigID')))]"
+							"id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-app-pip', copyIndex('constructFrontEndIPConfigID')))]"
 						}
 					}
 				},
@@ -250,7 +249,7 @@
 				"name": "constructNsg2Array"
 			}
 		],
-		"dnsLabel": "[toLower(parameters('dnsLabel'))]",
+		"uniqueString": "[toLower(parameters('uniqueString'))]",
 		"emptyArray": [],
 		"inboundNatPoolsArray": [
 			{
@@ -297,7 +296,7 @@
 				"name": "loadBalancerMgmtFrontEnd",
 				"properties": {
 					"publicIPAddress": {
-						"id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-mgmt-pip0'))]"
+						"id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-mgmt-pip0'))]"
 					}
 				}
 			}
@@ -306,15 +305,15 @@
 		"nsg0Array": "[variables('constructNsg0Array')]",
 		"nsg0Id": "[if(greater(variables('nsg0Length'), 0), createArray(resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg0Name'))), variables('emptyArray'))]",
 		"nsg0Length": "[length(parameters('nsg0'))]",
-		"nsg0Name": "[concat(variables('dnsLabel'), '-nsg0')]",
+		"nsg0Name": "[concat(variables('uniqueString'), '-nsg0')]",
 		"nsg1Array": "[variables('constructNsg1Array')]",
 		"nsg1Id": "[if(greater(variables('nsg1Length'), 0), createArray(resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg1Name'))), variables('emptyArray'))]",
 		"nsg1Length": "[length(parameters('nsg1'))]",
-		"nsg1Name": "[concat(variables('dnsLabel'), '-nsg1')]",
+		"nsg1Name": "[concat(variables('uniqueString'), '-nsg1')]",
 		"nsg2Array": "[variables('constructNsg2Array')]",
 		"nsg2Id": "[if(greater(variables('nsg2Length'), 0), createArray(resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg2Name'))), variables('emptyArray'))]",
 		"nsg2Length": "[length(parameters('nsg2'))]",
-		"nsg2Name": "[concat(variables('dnsLabel'), '-nsg2')]",
+		"nsg2Name": "[concat(variables('uniqueString'), '-nsg2')]",
 		"outboundNsgRule": [
 			{
 				"name": "allow_loadBalancer_traffic",
@@ -390,10 +389,10 @@
 				"name": "mgmtpipcopy"
 			},
 			"location": "[resourceGroup().location]",
-			"name": "[concat(variables('dnsLabel'), '-mgmt-pip', copyIndex())]",
+			"name": "[concat(variables('uniqueString'), '-mgmt-pip', copyIndex())]",
 			"properties": {
 				"dnsSettings": {
-					"domainNameLabel": "[concat(variables('dnsLabel'), '-mgmt', copyIndex(0))]"
+					"domainNameLabel": "[concat(variables('uniqueString'), '-mgmt', copyIndex(0))]"
 				},
 				"idleTimeoutInMinutes": 30,
 				"publicIPAllocationMethod": "Static"
@@ -412,10 +411,10 @@
 				"name": "apppipcopy"
 			},
 			"location": "[resourceGroup().location]",
-			"name": "[concat(variables('dnsLabel'), '-app-pip', copyIndex())]",
+			"name": "[concat(variables('uniqueString'), '-app-pip', copyIndex())]",
 			"properties": {
 				"dnsSettings": {
-					"domainNameLabel": "[concat(variables('dnsLabel'), '-app', copyIndex(0))]"
+					"domainNameLabel": "[concat(variables('uniqueString'), '-app', copyIndex(0))]"
 				},
 				"idleTimeoutInMinutes": 30,
 				"publicIPAllocationMethod": "Static"
@@ -516,7 +515,7 @@
 			"condition": "[greater(parameters('numberPublicExternalIpAddresses'), 0)]",
 			"copy": {
 				"count": "[parameters('numberPublicExternalIpAddresses')]",
-				"input": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-app-pip', copyIndex()))]"
+				"input": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-app-pip', copyIndex()))]"
 			},
 			"type": "array"
 		},
@@ -524,7 +523,7 @@
 			"condition": "[greater(parameters('numberPublicExternalIpAddresses'), 0)]",
 			"copy": {
 				"count": "[parameters('numberPublicExternalIpAddresses')]",
-				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-app-pip', copyIndex()))).ipAddress]"
+				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-app-pip', copyIndex()))).ipAddress]"
 			},
 			"type": "array"
 		},
@@ -532,7 +531,7 @@
 			"condition": "[greater(parameters('numberPublicExternalIpAddresses'), 0)]",
 			"copy": {
 				"count": "[parameters('numberPublicExternalIPAddresses')]",
-				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-app-pip', copyIndex()))).dnsSettings.fqdn]"
+				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-app-pip', copyIndex()))).dnsSettings.fqdn]"
 			},
 			"type": "array"
 		},
@@ -619,7 +618,7 @@
 			"condition": "[greater(parameters('numberPublicMgmtIpAddresses'), 0)]",
 			"copy": {
 				"count": "[parameters('numberPublicMgmtIpAddresses')]",
-				"input": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-mgmt-pip', copyIndex()))]"
+				"input": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-mgmt-pip', copyIndex()))]"
 			},
 			"type": "array"
 		},
@@ -627,7 +626,7 @@
 			"condition": "[greater(parameters('numberPublicMgmtIpAddresses'), 0)]",
 			"copy": {
 				"count": "[parameters('numberPublicMgmtIpAddresses')]",
-				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('dnsLabel'), '-mgmt-pip', copyIndex()))).ipAddress]"
+				"input": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('uniqueString'), '-mgmt-pip', copyIndex()))).ipAddress]"
 			},
 			"type": "array"
 		},
