@@ -17,15 +17,14 @@
 			"type": "string"
 		},
 		"uniqueString": {
-			"defaultValue": "",
 			"metadata": {
-				"description": "A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
+				"description": "REQUIRED - A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
 			},
 			"type": "string"
 		},
 		"sshKey": {
 			"metadata": {
-				"description": "Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
+				"description": "REQUIRED - Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
 			},
 			"type": "string"
 		},
@@ -44,9 +43,8 @@
 			"type": "string"
 		},
 		"restrictedSrcAddressMgmt": {
-			"defaultValue": "",
 			"metadata": {
-				"description": "When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources."
+				"description": "REQUIRED - When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources."
 			},
 			"type": "string"
 		},
@@ -90,48 +88,44 @@
 			"type": "bool"
 		},
 		"bigIqAddress": {
-			"defaultValue": "",
 			"metadata": {
-				"description": "The IP address (or hostname) for the BIG-IQ used when licensing the BIG-IP.  Note: The Azure function created by this template will make a REST call to the BIG-IQ (already existing) to revoke a license assignment when a BIG-IP instance is deallocated. This value should match the BIG-IQ address specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
+				"description": "REQUIRED - The IP address (or hostname) for the BIG-IQ used when licensing the BIG-IP.  Note: The Azure function created by this template will make a REST call to the BIG-IQ (already existing) to revoke a license assignment when a BIG-IP instance is deallocated. This value should match the BIG-IQ address specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqUsername": {
-			"defaultValue": "azureuser",
 			"metadata": {
-				"description": "The BIG-IQ username used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ username specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
+				"description": "REQUIRED - The BIG-IQ username used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ username specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqPassword": {
 			"metadata": {
-				"description": "The BIG-IQ password to use during BIG-IP licensing via BIG-IQ; it will be stored as a secret in the Azure function KeyVault created by this template. This value should match the BIG-IQ password specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
+				"description": "REQUIRED - The BIG-IQ password to use during BIG-IP licensing via BIG-IQ; it will be stored as a secret in the Azure function KeyVault created by this template. This value should match the BIG-IQ password specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "securestring"
 		},
-		"bigIqLicensePoolName": {
-			"defaultValue": "Default",
+		"bigIqLicensePool": {
 			"metadata": {
-				"description": "The BIG-IQ license pool to use during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ license pool specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
+				"description": "REQUIRED - The BIG-IQ license pool to use during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ license pool specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqTenant": {
-			"defaultValue": "Default",
 			"metadata": {
-				"description": "The BIG-IQ tenant used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ tenant specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
+				"description": "REQUIRED - The BIG-IQ tenant used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ tenant specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqUtilitySku": {
-			"defaultValue": "Default",
+			"defaultValue": "",
 			"metadata": {
 				"description": "The BIG-IQ utility license SKU used during BIG-IP licensing via BIG-IQ. This value should match the BIG-IQ utility SKU specified in the F5 Declarative Onboarding declaration passed to the bigIpRuntimeInitConfig template parameter."
 			},
 			"type": "string"
 		},
 		"bigIqVnetId": {
-			"defaultValue": "Default",
+			"defaultValue": "",
 			"metadata": {
 				"description": "The fully-qualified Azure resource ID of the virtual network where BIG-IQ is deployed. This is required to allow inbound communication from the Azure license revocation function and the BIG-IQ device. Leave the default value if the BIG-IQ device uses a public IP address for licensing."
 			},
@@ -274,7 +268,7 @@
 					"contentVersion": "[variables('contentVersion')]"
 				},
 				"parameters": {
-					"dnsLabel":{ "value": "[variables('uniqueString')]" },
+					"uniqueString":{ "value": "[variables('uniqueString')]" },
 					"externalLoadBalancerName":{ "value": "[variables('externalLoadBalancerName')]" },
 					"internalLoadBalancerName":{ "value": "[variables('internalLoadBalancerName')]" },
 					"internalLoadBalancerProbePort":{ "value": "[variables('internalLoadBalancerProbePort')]" },
@@ -340,7 +334,7 @@
 					"cpuMetricName":{ "value": "[variables('cpuMetricName')]" },
 					"customAutoscaleRules":{ "value": "[variables('customAutoscaleRules')]" },
 					"customEmail":{ "value": "[variables('customEmail')]" },
-					"dnsLabel":{ "value": "[variables('uniqueString')]" },
+					"uniqueString":{ "value": "[variables('uniqueString')]" },
 					"image":{ "value": "[variables('image')]" },
 					"inboundMgmtNatPoolId":{ "value": "[if(greater(variables('numberPublicMgmtIpAddresses'), 0), reference('dagTemplate').outputs.inboundMgmtNatPool.value, '')]" },
 					"inboundSshNatPoolId":{ "value": "[if(greater(variables('numberPublicMgmtIpAddresses'), 0), reference('dagTemplate').outputs.inboundSshNatPool.value, '')]" },
@@ -388,7 +382,7 @@
 					"bigIqUsername":{ "value": "[parameters('bigIqUsername')]" },
 					"bigIqPassword":{ "value": "[parameters('bigIqPassword')]" },
 					"bigIqTenant":{ "value": "[parameters('bigIqTenant')]" },
-					"bigIqLicensePoolName":{ "value": "[parameters('bigIqLicensePoolName')]" },
+					"bigIqLicensePool":{ "value": "[parameters('bigIqLicensePool')]" },
 					"bigIqUtilitySku":{ "value": "[parameters('bigIqUtilitySku')]" },
 					"functionAppName":{ "value": "[variables('functionAppName')]" },
 					"functionAppSku":{ "value": "[variables('functionAppSku')]" },

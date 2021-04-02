@@ -17,15 +17,14 @@
 			"type": "string"
 		},
 		"uniqueString": {
-			"defaultValue": "",
 			"metadata": {
-				"description": "A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
+				"description": "REQUIRED - A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
 			},
 			"type": "string"
 		},
 		"sshKey": {
 			"metadata": {
-				"description": "Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
+				"description": "REQUIRED - Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
 			},
 			"type": "string"
 		},
@@ -44,9 +43,8 @@
 			"type": "string"
 		},
 		"restrictedSrcAddressMgmt": {
-			"defaultValue": "",
 			"metadata": {
-				"description": "When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources."
+				"description": "REQUIRED - When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources."
 			},
 			"type": "string"
 		},
@@ -223,7 +221,7 @@
 					"contentVersion": "[variables('contentVersion')]"
 				},
 				"parameters": {
-					"dnsLabel":{ "value": "[variables('uniqueString')]" },
+					"uniqueString":{ "value": "[variables('uniqueString')]" },
 					"externalLoadBalancerName":{ "value": "[variables('externalLoadBalancerName')]" },
 					"internalLoadBalancerName":{ "value": "[variables('internalLoadBalancerName')]" },
 					"internalLoadBalancerProbePort":{ "value": "[variables('internalLoadBalancerProbePort')]" },
@@ -288,7 +286,7 @@
 					"cpuMetricName":{ "value": "[variables('cpuMetricName')]" },
 					"customAutoscaleRules":{ "value": "[variables('customAutoscaleRules')]" },
 					"customEmail":{ "value": "[variables('customEmail')]" },
-					"dnsLabel":{ "value": "[variables('uniqueString')]" },
+					"uniqueString":{ "value": "[variables('uniqueString')]" },
 					"image":{ "value": "[variables('image')]" },
 					"inboundMgmtNatPoolId":{ "value": "[if(greater(variables('numberPublicMgmtIpAddresses'), 0), reference('dagTemplate').outputs.inboundMgmtNatPool.value, '')]" },
 					"inboundSshNatPoolId":{ "value": "[if(greater(variables('numberPublicMgmtIpAddresses'), 0), reference('dagTemplate').outputs.inboundSshNatPool.value, '')]" },

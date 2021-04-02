@@ -11,6 +11,12 @@
 		"uniqueString": {
 			"value": ""
 		},
+		"sshKey": {
+			"value": ""
+		},
+		"newPassword": {
+			"value": ""
+		},
 		"appContainerName": {
 			"value": "f5devcentral/f5-demo-app:latest"
 		},
