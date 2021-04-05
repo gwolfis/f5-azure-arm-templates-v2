@@ -141,7 +141,7 @@
 		"appInstanceType": "Standard_D2s_v3",
 		"cloudInitUrl": "",
 
-		"appInsights": "[concat(resourceGroup().name, '-insights')]",
+		"appInsights": "[concat(variables('uniqueString'), '-insights')]",
 		"appInsightsId": "[resourceId('Microsoft.Insights/components', variables('appInsights'))]",
 		"cpuMetricName": "Percentage CPU",
 		"customAutoscaleRules": [{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"80","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"20","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"20000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"10000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}}],
@@ -159,7 +159,10 @@
 		"throughputMetricName": "Network In",
 		"vmScaleSetMaxCount": "[parameters('bigIpScalingMaxSize')]",
 		"vmScaleSetMinCount": "[parameters('bigIpScalingMinSize')]",
-		"vmssName": "[concat(variables('uniqueString'), '-vmss')]"
+		"vmssName": "[concat(variables('uniqueString'), '-vmss')]",
+		"uniqueStringTag": {
+			"uniqueString": "[parameters('uniqueString')]"
+		}
     },
 	"resources": [
 		{
@@ -305,7 +308,7 @@
 					"scaleOutTimeWindow":{ "value": "[variables('scaleOutTimeWindow')]" },
 					"sshKey":{ "value": "[parameters('sshKey')]" },
 					"subnetId":{ "value": "[reference('networkTemplate').outputs.subnets.value[0]]" },
-					"tagValues":{ "value": "[parameters('tagValues')]" },
+					"tagValues":{ "value": "[union(variables('uniqueStringTag'), parameters('tagValues'))]" },
 					"throughputMetricName":{ "value": "[variables('throughputMetricName')]" },
 					"useAvailabilityZones":{ "value": "[parameters('useAvailabilityZones')]" },
 					"userAssignManagedIdentity":{ "value": "[if(variables('assignManagedIdentity'), reference('accessTemplate').outputs.userAssignedIdentityId.value, '')]" },
