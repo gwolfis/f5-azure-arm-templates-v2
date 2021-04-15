@@ -27,23 +27,20 @@
 			"properties": {
 				"mode": "Incremental",
 				"parameters": {
-					"vmssName": {
+					"vmssId": {
 						"value": "vmssId"
 					},
 					"bigIqAddress": {
 						"value": "Default"
 					},
-					"bigIqLicensePoolName": {
+					"bigIqLicensePool": {
 						"value": "Default"
 					},
-					"bigIqLicenseSkuKeyword1": {
-						"value": "Default"
-					},
-					"bigIqLicenseUnitOfMeasure": {
+					"bigIqPassword": {
 						"value": "Default"
 					},
 					"bigIqUsername": {
-						"value": "Default"
+						"value": "azureuser"
 					},
 					"bigIqTenant": {
 						"value": "Default"

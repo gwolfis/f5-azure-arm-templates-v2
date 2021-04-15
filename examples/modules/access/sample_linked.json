@@ -32,17 +32,17 @@
 					"contentVersion": "1.1.0.0"
 				},
 				"parameters": {
-					"builtInRoleType": { "value": "Reader"	},
-					"customRoleName": {	"value": "custom-reader"    },
+					"builtInRoleType": { "value": "Reader" },
+					"customRolePermissions": { "value": [ "Microsoft.Resources/subscriptions/resourceGroups/read", "Microsoft.Resources/subscriptions/resourceGroups/list"]	},
+					"customRoleAssignableScopes": { "value": [ "[subscription().subscriptionId]"] },
 					"customRoleDescription": { "value": "this is a custom role defition for reader" },
-					"customRoleActions": { "value": [ "Microsoft.Resources/subscriptions/resourceGroups/read", "Microsoft.Resources/subscriptions/resourceGroups/list"]	},
-					"customRoleNotActions": { "value": [ "Microsoft.Resources/subscriptions/resourceGroups/write"]	},
-					"customRoleAssignableScopes": { "value": [ "[subscription().subscriptionId]"]	},
+					"customRoleName": {	"value": "custom-reader" },
 					"keyVaultName": { "value": "test-kv" },
-					"keyVaultPermissionsSecrets": { "value": [ "get", "list" ]	},
 					"keyVaultPermissionsKeys": { "value": [ "get", "list" ]	},
+					"keyVaultPermissionsSecrets": { "value": [ "get", "list" ] },
 					"secretName": { "value": "linux-admin" },
 					"secretValue": { "value": "StrongPassword212+" },
+					"userAssignedIdentityName": { "value": "" },
 					"tagValues": { "value": { "application": "APP", "cost": "COST", "environment": "ENV", "group": "GROUP", "owner": "OWNER" } }
 				}
 			}

@@ -77,6 +77,9 @@
         "uniqueString": {
 			"value": ""
 		},
+		"updateTag": {
+			"value": "[utcNow()]"
+		},
 		"useAvailabilityZones": {
 			"value": "Yes"
 		},

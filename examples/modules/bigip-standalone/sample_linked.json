@@ -28,59 +28,29 @@
 				"mode": "Incremental",
 				"parameters": {
 					"adminUsername": {
-						"value": "azureuser"
+						"value": "my-admin"
 					},
 					"image": {
-						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.002000"
+						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
 					},
 					"instanceType": {
-						"value": "Standard_DS2_v2"
+						"value": "Standard_D2s_v3"
 					},
-                    "loadBalancerBackendAddressPoolsArray": {
-                        "value": []
-                    },                   
-					"roleDefinitionId": {
+					"loadBalancerBackendAddressPoolsArray": {
+						"value": []
+					},
+					"mgmtSubnetId": {
 						"value": ""
 					},
-					"bigIpRuntimeInitConfig": {
+					"mgmtNsgId": {
 						"value": ""
 					},
-					"sshKey": {
+					"mgmtPublicIpId": {
 						"value": ""
 					},
-					"tagValues": {
-						"value": {
-							"application": "APP",
-							"cost": "COST",
-							"environment": "ENV",
-							"group": "GROUP",
-							"owner": "OWNER"
-						}
-					},
-                    "uniqueString": {
-						"value": "myString"
-					},
-					"useAvailabilityZones": {
-						"value": "Yes"
-					},
-					"userAssignManagedIdentity": {
+					"mgmtSelfIp": {
 						"value": ""
 					},
-					"vmName": {
-						"value": "bigip-vm"
-					},
-                    "mgmtSubnetId": {
-                        "value": ""
-                    },
-                    "mgmtNsgId": {
-                        "value": ""
-                    },
-                    "mgmtPublicIpId": {
-                        "value": ""
-                    },
-                    "mgmtSelfIP": {
-                        "value": ""
-                    },
 					"nic1SubnetId": {
 						"value": ""
 					},
@@ -93,9 +63,9 @@
 					"nic1SelfIp": {
 						"value": ""
 					},
-					"nic2ServiceIPs": {
-                        "value": []
-                    },
+					"nic1ServiceIPs": {
+						"value": []
+					},
 					"nic2SubnetId": {
 						"value": ""
 					},
@@ -108,9 +78,42 @@
 					"nic2SelfIp": {
 						"value": ""
 					},
-                    "nic2ServiceIPs": {
-                        "value": []
-                    }
+					"nic2ServiceIPs": {
+						"value": []
+					},
+					"roleDefinitionId": {
+						"value": ""
+					},
+					"bigIpRuntimeInitConfig": {
+						"value": ""
+					},
+					"sshKey": {
+						"value": ""
+					},       
+					"tagValues": {
+						"value": {
+							"application": "APP",
+							"cost": "COST",
+							"environment": "ENV",
+							"group": "GROUP",
+							"owner": "OWNER"
+						}
+					},
+					"uniqueString": {
+						"value": ""
+					},
+					"updateTag": {
+						"value": "[utcNow()]"
+					},
+					"useAvailabilityZones": {
+						"value": "Yes"
+					},
+					"userAssignManagedIdentity": {
+						"value": ""
+					},
+					"vmName": {
+						"value": ""
+					}
 				},
 				"templateLink": {
 					"contentVersion": "1.1.0.0",

@@ -28,10 +28,10 @@
 				"mode": "Incremental",
 				"parameters": {
 					"adminUsername": {
-						"value": "azureuser"
+						"value": "my-admin"
 					},
 					"appInsights": {
-						"value": "bigip-app"
+						"value": ""
 					},
 					"cpuMetricName": {
 						"value": "Percentage CPU"
@@ -42,11 +42,11 @@
 					"customEmail": {
 						"value": []
 					},
-					"dnsLabel": {
-						"value": "appDns"
+					"uniqueString": {
+						"value": ""
 					},
 					"image": {
-						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
+						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000"
 					},
 					"inboundMgmtNatPoolId": {
 						"value": ""
@@ -58,7 +58,7 @@
 						"value": ""
 					},
 					"instanceType": {
-						"value": "Standard_DS2_v2"
+						"value": "Standard_D2s_v3"
 					},
 					"loadBalancerBackendAddressPoolsArray": {
 						"value": []
@@ -110,6 +110,9 @@
 					},
 					"throughputMetricName": {
 						"value": "Network In"
+					},
+					"updateTag": {
+						"value": "[utcNow()]"
 					},
 					"useAvailabilityZones": {
 						"value": "Yes"

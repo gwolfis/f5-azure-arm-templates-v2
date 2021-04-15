@@ -31,7 +31,13 @@
 						"value": false
 					},
 					"numSubnets": {
-						"value": 2
+						"value": 1
+					},
+					"vnetName": {
+						"value": "virtualNetwork"
+					},
+					"vnetAddressPrefix": {
+						"value": "10.0"
 					},
 					"tagValues": {
 						"value": {
@@ -41,12 +47,6 @@
 							"group": "GROUP",
 							"owner": "OWNER"
 						}
-					},
-					"vnetName": {
-						"value": "virtualNetwork"
-					},
-					"vnetAddressPrefix": {
-						"value": "10.0"
 					}
 				},
 				"templateLink": {

@@ -8,6 +8,12 @@
 		"numSubnets": {
 			"value": 1
 		},
+		"vnetName": {
+			"value": "virtualNetwork"
+		},
+		"vnetAddressPrefix": {
+			"value": "10.0"
+		},
 		"tagValues": {
 			"value": {
 				"application": "APP",
@@ -16,12 +22,6 @@
 				"group": "GROUP",
 				"owner": "OWNER"
 			}
-		},
-		"vnetName": {
-			"value": "virtualNetwork"
-		},
-		"vnetAddressPrefix": {
-			"value": "10.0"
 		}
 	}
 }

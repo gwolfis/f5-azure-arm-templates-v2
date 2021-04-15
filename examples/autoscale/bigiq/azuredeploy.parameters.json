@@ -11,6 +11,9 @@
 		"uniqueString": {
 			"value": ""
 		},
+		"workspaceId": {
+			"value": ""
+		},
 		"sshKey": {
 			"value": ""
 		},
@@ -21,7 +24,7 @@
 			"value": "f5devcentral/f5-demo-app:latest"
 		},
 		"image": {
-			"value": "f5-networks:f5-big-ip-byol:f5-big-all-2slot-byol:15.1.201000"
+			"value": "f5-networks:f5-big-ip-byol:f5-big-all-2slot-byol:16.0.101000"
 		},
 		"bigIpRuntimeInitConfig": {
 			"value": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/runtime-init-conf-bigiq.yaml"

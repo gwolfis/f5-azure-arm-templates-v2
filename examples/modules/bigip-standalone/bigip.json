@@ -142,7 +142,7 @@
     },
     "sshKey": {
       "metadata": {
-        "description": "Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
+        "description": "REQUIRED - Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
       },
       "type": "string"
     },
@@ -167,9 +167,8 @@
       "type": "string"
     },
     "uniqueString": {
-      "defaultValue": "",
       "metadata": {
-        "description": "A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
+        "description": "REQUIRED - A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
       },
       "type": "string"
     },

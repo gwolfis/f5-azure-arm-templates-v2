@@ -2,8 +2,8 @@
 	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
 	"contentVersion": "1.2.0.0",
 	"parameters": {
-		"dnsLabel": {
-			"value": "test.dns.value"
+		"uniqueString": {
+			"value": ""
 		},
 		"externalLoadBalancerName": {
 			"value": "None"
@@ -12,7 +12,7 @@
 			"value": "None"
 		},
 		"internalLoadBalancerProbePort": {
-			"value": 3456
+			"value": "3456"
 		},
 		"internalSubnetId": {
 			"value": ""
@@ -22,12 +22,6 @@
 				"80",
 				"443"
 			]
-		},
-		"numberPublicExternalIpAddresses": {
-			"value": 1
-		},
-		"numberPublicMgmtIpAddresses": {
-			"value": 0
 		},
 		"nsg0": {
 			"value": [
@@ -60,6 +54,12 @@
 					"protocol": "Tcp"
 				}
 			]
+		},
+		"numberPublicExternalIpAddresses": {
+			"value": 1
+		},
+		"numberPublicMgmtIpAddresses": {
+			"value": 0
 		},
 		"tagValues": {
 			"value": {

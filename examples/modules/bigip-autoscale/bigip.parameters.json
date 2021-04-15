@@ -17,11 +17,11 @@
 		"customEmail": {
 			"value": []
 		},
-		"dnsLabel": {
-			"value": "test.dns.value"
+		"uniqueString": {
+			"value": ""
 		},
 		"image": {
-			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
+			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000"
 		},
 		"inboundMgmtNatPoolId": {
 			"value": ""
@@ -85,6 +85,9 @@
 		},
 		"throughputMetricName": {
 			"value": "Network In"
+		},
+		"updateTag": {
+			"value": "[utcNow()]"
 		},
 		"useAvailabilityZones": {
 			"value": "Yes"

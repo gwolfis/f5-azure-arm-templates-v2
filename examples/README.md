@@ -1,4 +1,3 @@
-
 # Example Templates
 
 - [Example Templates](#example-templates)
@@ -9,6 +8,7 @@
   - [Usage](#usage)
   - [BIG-IP Configuration](#big-ip-configuration)
   - [Cloud Configuration](#cloud-configuration)
+  - [Style Guide](#style-guide)
   - [Getting Help](#getting-help)
     - [Filing Issues](#filing-issues)
 
@@ -79,7 +79,7 @@ OR
 
 2. Edit the *paramaters.json file and launch via CLI.
   ex.
-  ```
+  ```bash
   az group create -l westus -n my-rg
   az deployment group create --name my-parent --resource-group my-rg --template-file azuredeploy.json  --parameters azuredeploy.parameters.json
   ```
@@ -133,7 +133,7 @@ A high level overview of customizing the templates may look like:
         ```
       - Add your newly created repo as a remote
         ```
-        git remote add myRemote git@github.com:<YOURACCOUNTHERE>/f5-azure-arm-templates-v2.git
+        git remote add myRemote git@github.com:<YOUR_ACCOUNT_HERE>/f5-azure-arm-templates-v2.git
         ```
       - Publish to your new remote repo
         ```
@@ -146,18 +146,20 @@ A high level overview of customizing the templates may look like:
     #### Azure Storage
 
       - Upload templates to Azure storage (from the directory containing the f5-azure-arm-templates-v2/ repo):
-        - az group create -n [RESOURCE GROUP] -l [REGION]
-        - az storage account create -n [STORAGE ACCOUNT NAME] -g [RESOURCE GROUP] -l [REGION]
-        - az storage container create -n [CONTAINER NAME] --account-name [STORAGE ACCOUNT NAME]  --public-access container
-        - az storage blob upload-batch -s f5-azure-arm-templates-v2/ -d https://[STORAGE ACCOUNT NAME].blob.core.windows.net/[CONTAINER NAME]
+          ```bash
+          az group create -n ${RESOURCE_GROUP} -l ${REGION}
+          az storage account create -n ${STORAGE_ACCOUNT_NAME} -g ${RESOURCE_GROUP} -l ${REGION}
+          az storage container create -n ${CONTAINER NAME} --account-name ${STORAGE_ACCOUNT_NAME}  --public-access container
+          az storage blob upload-batch -s f5-azure-arm-templates-v2/ -d https://${STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${CONTAINER NAME}
+          ```
 
-        ex.
-        ```
-        az group create -l westus -n custom-templates-group
-        az storage account create -n customtmpltsacct -g custom-templates-group -l westus --sku Standard_LRS
-        az storage container create --name customizations --account-name customtmpltsacct --public-access container
-        az storage blob upload-batch -s f5-azure-arm-templates-v2/ -d https://customtmpltsacct.blob.core.windows.net/customizations
-        ```
+          ex.
+          ```bash
+          az group create -l westus -n custom-templates-group
+          az storage account create -n customtmpltsacct -g custom-templates-group -l westus --sku Standard_LRS
+          az storage container create --name customizations --account-name customtmpltsacct --public-access container
+          az storage blob upload-batch -s f5-azure-arm-templates-v2/ -d https://customtmpltsacct.blob.core.windows.net/customizations
+          ```
       - ***WARNING: This particular example will upload the entire git repository folder to Azure storage. If containing any sensitive information (ex. from .gitignore, custom files), you should remove those.***
 
  1. Update the template parameters ``templateBaseUrl`` and ``artifactLocation`` to reference the custom location. These must combine to resolve to the location containing the ``modules/`` folder.
@@ -166,7 +168,7 @@ A high level overview of customizing the templates may look like:
 
     #### Github
     Modules location: https://raw.githubusercontent.com/myAccount/f5-azure-arm-templates-v2/customizations/examples/modules
-      ``` 
+      ```json
           "templateBaseUrl": {
             "value": "https://raw.githubusercontent.com/myAccount/f5-azure-arm-templates-v2/"
           },
@@ -177,7 +179,7 @@ A high level overview of customizing the templates may look like:
 
     #### Azure Storage
     Modules location: https://customtmpltsacct.blob.core.windows.net/customizations/examples/modules
-      ```
+      ```json
           "templateBaseUrl": {
             "value": "https://customtmpltsacct.blob.core.windows.net/"
           },
@@ -187,6 +189,44 @@ A high level overview of customizing the templates may look like:
       ```
 
 4. Launch custom templates from new location
+
+
+## Style Guide
+
+Variables that are meant to be customized by users are often encased in `<>`, are prefixed or contain `YOUR`, and are CAPITALIZED in order to stand out. Replace anything in `<>` with **YOUR_VALUE**. For example,
+  - In config files, replace:
+      ```yaml
+      resourceGroup: <YOUR_RESOURCE_GROUP>
+      ```
+    with
+      ```yaml
+      resourceGroup: myGroupName
+      ```
+  - In cli examples, replace:
+      ```shell 
+      create auth user <YOUR_WEBUI_USERNAME> password ...
+      ```
+    with
+      ```shell
+      create auth user myCustomUser password ...
+      ```
+
+For convience, for some examples that are often run in bash (ex. aws cli) have values that should be replaced in bash variable format. Replace anything in `${}` with **YOUR_VALUE**. For example,
+  - replace: 
+      ```bash 
+      az group create -n ${RESOURCE_GROUP} -l ${REGION}
+      ```
+    with 
+      ```bash 
+      az group create -n myGroupName -l useast
+      ```
+  - Or leverage the convenience and set as bash variables before running command:
+      ```bash
+      RESOURCE_GROUP=myGroupName
+      REGION=useast
+      az group create -n ${RESOURCE_GROUP} -l ${REGION}
+      ```
+
 
 
 ## Getting Help

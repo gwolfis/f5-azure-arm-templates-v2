@@ -22,6 +22,13 @@
 			},
 			"type": "string"
 		},
+		"workspaceId": {
+			"metadata": {
+				"description": "Log Analytics workspace ID used by Telemetry Streaming for sending logs"
+			},
+			"type": "string",
+			"defaultValue": "WORKSPACE_ID"
+		},
 		"sshKey": {
 			"metadata": {
 				"description": "REQUIRED - Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines."
@@ -49,7 +56,7 @@
 			"type": "string"
 		},
 		"image": {
-			"defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000",
+			"defaultValue": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:16.0.101000",
 			"metadata": {
 				"description": "2 formats accepted. URN of the image to use in Azure marketplace or id of custom image. Example URN value: f5-networks:f5-big-ip-byol:f5-big-ltm-2slot-byol:15.1.201000. You can find the URNs of F5 marketplace images in the README for this template or by running the command: az vm image list --output yaml --publisher f5-networks --all. See https://clouddocs.f5.com/cloud/public/v1/azure/Azure_download.html for information on creating custom BIG-IP image."
 			},
@@ -144,7 +151,7 @@
 		"appInsights": "[concat(variables('uniqueString'), '-insights')]",
 		"appInsightsId": "[resourceId('Microsoft.Insights/components', variables('appInsights'))]",
 		"cpuMetricName": "Percentage CPU",
-		"customAutoscaleRules": [{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"80","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"20","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"3000000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M","dividePerInstance": true}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"2000000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M","dividePerInstance": true}}],
+		"customAutoscaleRules": [{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"80","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_cpu","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"20","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Increase","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"GreaterThan","statistic":"Average","threshold":"20000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}},{"scaleAction":{"direction":"Decrease","type":"ChangeCount","value":"1","cooldown":"PT1M"},"metricTrigger":{"metricName":"customMetrics/F5_system_networkInterfaces_mgmt_counters.bitsIn","metricNamespace":"","metricResourceUri":"[variables('appInsightsId')]","operator":"LessThan","statistic":"Average","threshold":"10000000","timeAggregation":"Average","timeGrain":"PT1M","timeWindow":"PT10M"}}],
 		"customEmail": [],
 		"image": "[parameters('image')]",
 		"instanceType": "Standard_DS3_v2",
@@ -160,10 +167,11 @@
 		"vmScaleSetMaxCount": "[parameters('bigIpScalingMaxSize')]",
 		"vmScaleSetMinCount": "[parameters('bigIpScalingMinSize')]",
 		"vmssName": "[concat(variables('uniqueString'), '-vmss')]",
-		"uniqueStringTag": {
-			"0uniqueString": "[parameters('uniqueString')]"
+		"runtimeInitTag": {
+			"workspaceId": "[parameters('workspaceId')]",
+			"uniqueString": "[parameters('uniqueString')]"
 		}
-    },
+	},
 	"resources": [
 		{
 			"type": "Microsoft.Resources/deployments",
@@ -205,7 +213,7 @@
 				"parameters": {
 					"numSubnets":{ "value": "[variables('numSubnets')]" },
 					"vnetName":{ "value": "[variables('vnetName')]" },
-					"vnetAddressPrefix":{ "value": "[variables('vnetAddressPrefix')]" },					
+					"vnetAddressPrefix":{ "value": "[variables('vnetAddressPrefix')]" },
 					"tagValues":{ "value": "[parameters('tagValues')]" }
 				}
 			}
@@ -308,7 +316,7 @@
 					"scaleOutTimeWindow":{ "value": "[variables('scaleOutTimeWindow')]" },
 					"sshKey":{ "value": "[parameters('sshKey')]" },
 					"subnetId":{ "value": "[reference('networkTemplate').outputs.subnets.value[0]]" },
-					"tagValues":{ "value": "[union(variables('uniqueStringTag'), parameters('tagValues'))]" },
+					"tagValues":{ "value": "[union(variables('runtimeInitTag'), parameters('tagValues'))]" },
 					"throughputMetricName":{ "value": "[variables('throughputMetricName')]" },
 					"useAvailabilityZones":{ "value": "[parameters('useAvailabilityZones')]" },
 					"userAssignManagedIdentity":{ "value": "[if(variables('assignManagedIdentity'), reference('accessTemplate').outputs.userAssignedIdentityId.value, '')]" },
@@ -342,7 +350,7 @@
 		"vmssId": {
             "type": "String",
             "value": "[reference('bigipTemplate').outputs.vmssID.value]"
-        },		
+        },
 		"bigipUsername": {
             "type": "String",
             "value": "[variables('adminUsername')]"

@@ -14,11 +14,10 @@ Welcome to the GitHub repository for F5's ARM templates V2 for Azure deployments
 - **examples**<br>
   These are our next-generation Cloud Solutions Templates 2.0 (CST2) which have been designed to provide an improved user experience via fewer templates, simplified deployments, customization via a new modular nested/linked architecture, and more. The example templates in this directory have been tested and verified to work as-is and are intended to provide reference deployments of F5 BIG-IP Virtual Editions. 
 
-  Phase 1 focuses on BIG-IP VE/AWAF Autoscale for Azure use cases. Upcoming phases plan to include, but are not limited to, the following use cases:
+  Phase 1 focuses on BIG-IP VE Quickstart and Autoscale WAF use cases. Upcoming phases plan to include, but are not limited to, the following use cases:
 
-  - BIG-IP VE Quickstart (Standalone)
   - BIG-IP VE Failover
-
+  
 
 ## Template information
 
@@ -29,11 +28,10 @@ To get started, first checkout the /examples folder.
 
 ## Getting Help
 
-Due to the heavy customization requirements of external cloud resources and BIG-IP configurations in these solutions, F5 does not provide technical support for deploying, customizing, or troubleshooting the templates themselves. However, the various underlying products and components used (for example: F5 BIG-IP Virtual Edition, F5 BIG-IP Runtime Init, Automation Toolchain extensions, and Cloud Failover Extension (CFE)) in the solutions located here are F5-Supported and capable of being deployed with other orchestration tools. Problems found with the templates deployed as-is should be reported via a GitHub issue. Read more about [Support Policies](https://www.f5.com/company/policies/support-policies).
+Due to the heavy customization requirements of external cloud resources and BIG-IP configurations in these solutions, F5 does not provide technical support for deploying, customizing, or troubleshooting the templates themselves. However, the various underlying products and components used (for example: [F5 BIG-IP Virtual Edition](https://clouddocs.f5.com/cloud/public/v1/), [F5 BIG-IP Runtime Init](https://github.com/F5Networks/f5-bigip-runtime-init), [F5 Automation Toolchain](https://www.f5.com/pdf/products/automation-toolchain-overview.pdf) extensions, and [Cloud Failover Extension (CFE)](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/)) in the solutions located here are F5-Supported and capable of being deployed with other orchestration tools. Problems found with the templates deployed as-is should be reported via a GitHub issue. Read more about [Support Policies](https://www.f5.com/company/policies/support-policies).
 
 
 For help with authoring and support for custom CST2 templates, we recommend engaging F5 Professional Services (PS).
-
 
 ### Filing Issues
 

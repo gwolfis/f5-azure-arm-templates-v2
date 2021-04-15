@@ -27,8 +27,8 @@
 			"properties": {
 				"mode": "Incremental",
 				"parameters": {
-					"dnsLabel": {
-						"value": "appDns"
+					"uniqueString": {
+						"value": ""
 					},
 					"externalLoadBalancerName": {
 						"value": "None"
@@ -37,7 +37,7 @@
 						"value": "None"
 					},
 					"internalLoadBalancerProbePort": {
-						"value": 3456
+						"value": "3456"
 					},
 					"internalSubnetId": {
 						"value": ""
@@ -52,12 +52,12 @@
 						"value": [
 							{
 								"destinationPortRanges": ["22","8443"],
-								"sourceAddressPrefix": "*",
+								"sourceAddressPrefix": "",
 								"protocol": "Tcp"
 							},
 							{
 								"destinationPortRanges": ["80","443"],
-								"sourceAddressPrefix": "*",
+								"sourceAddressPrefix": "",
 								"protocol": "Tcp"
 							}
 						]
@@ -66,7 +66,7 @@
 						"value": [
 							{
 								"destinationPortRanges": ["80","443"],
-								"sourceAddressPrefix": "*",
+								"sourceAddressPrefix": "",
 								"protocol": "Tcp"
 							}
 						]
@@ -75,7 +75,7 @@
 						"value": [
 							{
 								"destinationPortRanges": ["80","443"],
-								"sourceAddressPrefix": "*",
+								"sourceAddressPrefix": "",
 								"protocol": "Tcp"
 							}
 						]

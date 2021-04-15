@@ -27,32 +27,32 @@
 			"properties": {
 				"mode": "Incremental",
 				"parameters": {
-					"adminPassword": {
-						"value": "Default"
-					},
 					"adminUsername": {
-						"value": "Default"
+						"value": "azureuser"
 					},
-					"cloudInitUrl": {
-						"value": "Default"
-					},
-					"initScriptDeliveryLocation": {
-						"value": "Default"
-					},
-					"initScriptParameters": {
-						"value": "Default"
+					"sshKey": {
+						"value": ""
 					},
 					"createAutoscaleGroup": {
 						"value": true
 					},
 					"instanceName": {
-						"value": "Default"
+						"value": "vm01"
 					},
 					"instanceType": {
-						"value": "Default"
+						"value": "Standard_D2s_v3"
 					},
 					"subnetId": {
-						"value": "Default"
+						"value": "app-subnet"
+					},
+					"nsgId": {
+						"value": ""
+					},
+					"appContainerName": {
+						"value": "f5devcentral/f5-demo-app:latest"
+					},
+					"cloudInitUrl": {
+						"value": ""
 					},
 					"tagValues": {
 						"value": {
