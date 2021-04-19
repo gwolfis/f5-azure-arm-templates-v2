@@ -570,37 +570,6 @@
         "scope": "[resourceGroup().id]"
       },
       "type": "Microsoft.Authorization/roleAssignments"
-    },
-    {
-      "name": "[variables('deploymentScriptName')]",
-      "condition": "[and(not(equals(variables('appInsightsName'), 'NOT_USED')), not(empty(parameters('customAutoscaleRules'))))]",
-      "dependsOn": [
-        "[variables('appInsightsName')]"
-      ],
-      "type": "Microsoft.Resources/deploymentScripts",
-      "apiVersion": "2019-10-01-preview",
-      "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[parameters('userAssignManagedIdentity')]": {}
-        }
-      },
-      "location": "[resourceGroup().location]",
-      "kind": "AzureCLI",
-      "tags": "[if(empty(parameters('tagValues')), json('null'), parameters('tagValues'))]",
-      "properties": {
-        "AzCliVersion": "2.0.80",
-        "timeout": "PT30M",
-        "environmentVariables": [
-          {
-            "name": "INSTRUMENTATION_KEY",
-            "secureValue": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), variables('appInsightsComponentsApiVersion')).InstrumentationKey]"
-          }
-        ],
-        "scriptContent": "NOW=$(date); METRICS=(\"F5_system_cpu\" \"F5_system_tmmCpu\" \"F5_system_memory\" \"F5_system_tmmMemory\" \"F5_throughputIn_sys/performance/throughput/In_Current\"); for METRIC in \"${METRICS[@]}\"; do curl -d '{\"name\":\"MetricData\",\"time\":\"'\"${NOW}\"'\",\"iKey\":\"'\"${INSTRUMENTATION_KEY}\"'\",\"data\":{\"baseType\":\"MetricData\",\"baseData\":{\"metrics\":[{\"name\":\"'\"${METRIC}\"'\",\"value\":0,\"count\":0}]}}}' https://dc.services.visualstudio.com/v2/track; sleep 2; done",
-        "cleanupPreference": "OnSuccess",
-        "retentionInterval": "P1D"
-      }
     }
   ],
   "outputs": {
