@@ -105,11 +105,11 @@
         },
         "workbookName": {
             "type": "String",
-            "value": "[parameters('workbookDisplayName'))]"
+            "value": "[parameters('workbookDisplayName')]"
         },
         "workbookId": {
             "type": "string",
-            "value": "[resourceId( 'microsoft.insights/workbooks', guid(resourceGroup().id,parameters('uniqueString'),'waf-view-workbook'))]"
+            "value": "[resourceId( 'microsoft.insights/workbooks', guid(resourceGroup().id,parameters('uniqueString'),'waf-view-workbook') )]"
         }
     }
 
