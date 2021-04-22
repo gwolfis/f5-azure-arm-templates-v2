@@ -51,13 +51,6 @@
             "metadata": {
                 "description": "The gallery that the workbook will been shown under. Supported values include workbook, tsg, etc. Usually, this is 'workbook'"
             }
-        },
-        "workbookId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]",
-            "metadata": {
-                "description": "The unique guid for this workbook instance"
-            }
         }
     },
     "variables": {
@@ -83,7 +76,7 @@
             }
         },
         {
-            "name": "[parameters('workbookId')]",
+            "name": "[guid(resourceGroup().id,parameters('uniqueString').'waf-view-workbook')]",
             "type": "microsoft.insights/workbooks",
             "location": "[parameters('location')]",
             "apiVersion": "2021-03-08",
