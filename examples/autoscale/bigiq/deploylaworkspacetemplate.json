@@ -101,7 +101,7 @@
         },
         "workspaceId": {
             "type": "String",
-            "value":  "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))).properties.customerId]"
+            "value":  "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))).customerId]"
         },
         "workbookName": {
             "type": "String",
