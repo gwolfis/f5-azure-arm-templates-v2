@@ -54,7 +54,7 @@
       },
       "workbookId": {
           "type": "string",
-          "defaultValue": "F5-Waf-View-Workbook",
+          "defaultValue": "[newGuid()]",
           "metadata": {
               "description": "The unique guid for this workbook instance"
           }
