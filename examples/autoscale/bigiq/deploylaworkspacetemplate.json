@@ -83,8 +83,8 @@
           }
       },
       {
-        "name": "[concat( parameters('workbookId'),'-',parameters('uniqueString') )]",
-        "type": "microsoft.insights/workbooks",
+        "name": "[parameters('workbookId')]",
+          "type": "microsoft.insights/workbooks",
           "location": "[parameters('location')]",
           "apiVersion": "2021-03-08",
           "dependsOn": [],
