@@ -76,7 +76,7 @@
             }
         },
         {
-            "name": "[guid(resourceGroup().id,parameters('uniqueString').'waf-view-workbook')]",
+            "name": "[guid(resourceGroup().id,parameters('uniqueString'),'waf-view-workbook')]",
             "type": "microsoft.insights/workbooks",
             "location": "[parameters('location')]",
             "apiVersion": "2021-03-08",
