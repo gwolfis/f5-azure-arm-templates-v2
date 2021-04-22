@@ -89,5 +89,27 @@
               "sourceId": "[variables('workspaceId')]"
             }
           }        
-       ]
+    ],
+    "outputs": {
+        "workspaceName": {
+            "type": "String",
+            "value": "[parameters('workspaceName')]"
+        },
+        "workspaceResourceId": {
+            "type": "String",
+            "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+        },
+        "workspaceId": {
+            "type": "String",
+            "value":  "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))).properties.customerId]"
+        },
+        "workbookName": {
+            "type": "String",
+            "value": "[parameters('workbookDisplayName'))]"
+        },
+        "workbookId": {
+            "type": "string",
+            "value": "[resourceId( 'microsoft.insights/workbooks', guid(resourceGroup().id,parameters('uniqueString'),'waf-view-workbook'))]"
+        }
     }
+}
